@@ -13,11 +13,11 @@
             <div class="header_path">Аренда</div>
             <div class="header_path">Продажа</div>
         </div>
-        <?php if(Auth::sessionCheck()): ?>
-            <div class="header_path header_button"><a href="../view/advertisement.php">Добавить объявление</a></div>
+        <?php if(\Classes\Auth::sessionCheck()): ?>
+            <div class="header_path header_button"><a href="/advertisement.php">Добавить объявление</a></div>
         <?php else: ?>
             <div class="header_auth_box">
-                <div class="header_path header_button"><a href="../view/register.php">Регистрация</a></div>
+                <div class="header_path header_button"><a href="/register.php">Регистрация</a></div>
                 <div class="header_path header_button login_hover">Вход
                     <div class="header_login_box">
                         <input class="small_input" type="text" placeholder="Введите никнейм/номер телефона">

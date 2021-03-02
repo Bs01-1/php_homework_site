@@ -1,5 +1,6 @@
 <?php
 
+namespace Classes;
 
 class Auth
 {
@@ -66,7 +67,7 @@ class Auth
     }
 
     private function checkUniqueNick(){
-        $mysqli = new mysqli('localhost', 'root', 'root', 'realty');
+        $mysqli = \models\Connect::getConnect();
         $mysqli->set_charset("utf8");
 
         $result = $mysqli -> query("SELECT nickname FROM users WHERE nickname = '{$this->nick}'");
@@ -80,7 +81,7 @@ class Auth
         $date = date('Y-m-d');
         $_SESSION['test'] = $date;
 
-        $mysqli = new mysqli('localhost', 'root', 'root', 'realty');
+        $mysqli = \models\Connect::getConnect();
         $mysqli->set_charset("utf8");
         $mysqli->query("INSERT INTO users (nickname, password, gender, city, phone, date, createdAt)
             VALUES ('{$this->nick}', '{$pass}', '{$this->sex}', '{$this->city}', '{$this->phone}', '{$this->date}', '{$date}')");

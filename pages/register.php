@@ -1,12 +1,11 @@
 <?php
     session_start();
-    require '../models/Auth.php';
+    require '../app/Auth.php';
 
     if (isset($_POST['send_reg'])) {
-        $Auth = new Auth($_POST['nick'], $_POST['password'], $_POST['city'], $_POST['phone'], $_POST['date'], $_POST['sex']);
+        $Auth = new \models\Auth($_POST['nick'], $_POST['password'], $_POST['city'], $_POST['phone'], $_POST['date'], $_POST['sex']);
         $err = $Auth->registration();
     }
-    echo $_SESSION['test']."<br>".$_SESSION['date'];
 ?>
 
 <head>
