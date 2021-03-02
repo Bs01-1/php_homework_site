@@ -1,7 +1,10 @@
 {
   "autoload": {
     "psr-4": {
-      "Classes\\" : "classes/"
+      "Classes\\": "classes/"
     }
+  },
+  "require": {
+    "ext-mysqli": "*"
   }
 }

@@ -2,23 +2,19 @@
 
 namespace Classes;
 
+use Classes\Repositories\Repository;
+use Classes\Repositories\UserRepository;
+use Classes\Request\AuthRequest;
+
 class Auth
 {
-    public $nick;
-    public $paswword;
-    public $city;
-    public $phone;
-    public $date;
-    public $sex;
+    protected AuthRequest $request;
+    protected UserRepository $repository;
 
-    public function __construct($nick, $paswword, $city, $phone, $date, $sex)
+    public function __construct(AuthRequest $request, UserRepository $repository)
     {
-        $this->nick = htmlspecialchars($nick);
-        $this->paswword = htmlspecialchars($paswword);
-        $this->city = htmlspecialchars($city);
-        $this->phone = htmlspecialchars($phone);
-        $this->date = htmlspecialchars($date);
-        $this->sex = htmlspecialchars($sex);
+        $this->request = $request;
+        $this->repository = $repository;
     }
 
     public static function sessionCheck ()
@@ -32,22 +28,22 @@ class Auth
     {
         $this->setRegisterFormSession();
 
-        if (mb_strlen($this->nick) < 4){
+        if (mb_strlen($this->request->nick) < 4){
             return 'Ваш никнейм слишком короткий! Измените ник и попробуйте снова.';
         }
-        if (!$this->checkUniqueNick()){
+        if (!$this->repository->checkUniqueNick($this->request->nick)){
             return 'Такой ник уже есть в нашей базе! Введите другой ник.';
         }
-        if (mb_strlen($this->paswword) < 9){
+        if (mb_strlen($this->request->password) < 9){
             return 'Ага! Пытаетесь обмануть js? F5 и вводи пароль заново. Хотя тут только проверка на длину, 
                 остальные проверки мне тут лень прописывать.';
         }
-        if ($this->city != 'Екатеринбург'){
+        if ($this->request->city != 'Екатеринбург'){
             return 'Этот сайт функционирует только в Екб, так что пиши в поле города "Екатеринбург".';
         }
 
-        $pos = mb_stripos($this->date, '-');
-        $date = mb_substr($this->date, 0, $pos);
+        $pos = mb_stripos($this->request->date, '-');
+        $date = mb_substr($this->request->date, 0, $pos);
         $_SESSION['test'] = $date;
         if ($date > 2002 || $date < 1910){
             return 'Ты слишком молод или стар для этого сайта!';
@@ -58,32 +54,25 @@ class Auth
     }
 
     private function setRegisterFormSession (){
-        $_SESSION['nick'] = $this->nick;
-        $_SESSION['password'] = $this->paswword;
-        $_SESSION['city'] = $this->city;
-        $_SESSION['phone'] = $this->phone;
-        $_SESSION['date'] = $this->date;
-        $_SESSION['sex'] = $this->sex;
+        $_SESSION['nick'] = $this->request->nick;
+        $_SESSION['password'] = $this->request->password;
+        $_SESSION['city'] = $this->request->city;
+        $_SESSION['phone'] = $this->request->phone;
+        $_SESSION['date'] = $this->request->date;
+        $_SESSION['sex'] = $this->request->sex;
     }
 
-    private function checkUniqueNick(){
-        $mysqli = \models\Connect::getConnect();
-        $mysqli->set_charset("utf8");
 
-        $result = $mysqli -> query("SELECT nickname FROM users WHERE nickname = '{$this->nick}'");
-        if($result->num_rows >= 1){
-            return false;
-        } else return true;
-    }
 
     private function addNewUser () {
-        $pass = (md5($this->paswword));
+        $pass = (md5($this->request->password));
         $date = date('Y-m-d');
         $_SESSION['test'] = $date;
 
         $mysqli = \models\Connect::getConnect();
         $mysqli->set_charset("utf8");
         $mysqli->query("INSERT INTO users (nickname, password, gender, city, phone, date, createdAt)
-            VALUES ('{$this->nick}', '{$pass}', '{$this->sex}', '{$this->city}', '{$this->phone}', '{$this->date}', '{$date}')");
+            VALUES ('{$this->request->nick}', '{$pass}', '{$this->request->sex}', '{$this->request->city}', 
+            '{$this->request->phone}', '{$this->request->date}', '{$date}')");
     }
 }

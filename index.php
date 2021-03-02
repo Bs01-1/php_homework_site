@@ -5,24 +5,34 @@
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
 
-    require __DIR__ . '/vendor/autoload.php';
+    $mysqli = new mysqli('localhost', 'root', 'root', 'realty');
+    const rootPath = '/var/www/html/php_homework_site';
+    require rootPath.'/vendor/autoload.php';
+    $foundPage = null;
 
-    $included_files = get_included_files();
+    $routes = [
+        ['url' => '/register', 'path' => 'register.php'],
+        ['url' => '/advertisement', 'path' => 'advertisement.php'],
+    ];
 
-    foreach ($included_files as $filename) {
-        echo "$filename"."<br>";
+    $requestUrl = $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?? null;
+    if (!$requestUrl) {
+        return;
     }
-?>
 
-<html>
-    <head>
-        <title>Недвижимость в Екатеринбурге</title>
-    </head>
-    <body>
-        <div class="main-wrapper">
-            <? require __DIR__ . '/pages/header.php' ?>
-            <? require __DIR__ . '/pages/footer.php' ?>
-        </div>
-    </body>
-</html>
+    foreach ($routes as $route){
+        if ($route['url'] == $requestUrl){
+            $foundPage = $route['path'];
+        }
+    }
+
+    if (!$foundPage) {
+        require rootPath . '/pages/404.php';
+        return;
+    }
+
+    require rootPath . '/pages/header.php';
+    require rootPath . '/pages/' . $foundPage;
+    require rootPath . '/pages/footer.php';
+?>
 
