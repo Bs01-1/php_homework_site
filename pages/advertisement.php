@@ -1,6 +1,6 @@
 <?php
     session_start();
-    require '../models/Auth.php';
+    require '../app/Auth.php';
 ?>
 
 <head>
