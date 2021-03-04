@@ -31,6 +31,18 @@ function backgroundColor() {
     }, 150);
 }
 
+let viewLogInBox = false;
+function headerViewLogInBox() {
+    let logInBox = document.querySelector('.header_login_box');
+    if (!viewLogInBox){
+        logInBox.classList.add('header_login_box_view');
+        viewLogInBox = true;
+    } else {
+        logInBox.classList.remove('header_login_box_view');
+        viewLogInBox = false;
+    }
+}
+
 function checkPassword() {
     let password = document.getElementById('password');
     let password_repeat = document.getElementById('password_repeat');

@@ -4,10 +4,8 @@
 namespace Classes\Request;
 
 
-class AuthRequest extends HttpRequest
+class RegisterRequest extends AuthRequest
 {
-    public string $nick;
-    public string $password;
     public string $city;
     public string $phone;
     public string $date;

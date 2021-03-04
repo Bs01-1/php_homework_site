@@ -71,10 +71,6 @@ a {
     display: flex;
 }
 
-.login_hover:hover .header_login_box{
-    display: flex;
-}
-
 .header_login_box {
     display: none;
     position: absolute;
@@ -86,6 +82,8 @@ a {
     padding: 15px 30px 0 30px;
     border-radius: 8px;
 }
+
+.header_login_box_view { display: flex }
 
 .header_path_box {
     display: flex;

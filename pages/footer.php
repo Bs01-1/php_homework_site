@@ -1,6 +1,3 @@
-<div class="footer_box">
-
-</div>
 <div class="footer_box_bottom">
     <div class="footer_btn_box_bottom">Партнеры</div>
     <div class="footer_btn_box_bottom">Карта сайта</div>
