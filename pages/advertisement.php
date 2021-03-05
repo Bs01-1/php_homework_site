@@ -46,7 +46,7 @@ function checkFormData(AdvertisementRequest $advertisementRequest, ImgRequest $i
         return false;
     } else if ($imgRequest->name[0] !== ''){
         foreach ($imgRequest->type as $type) {
-            if ($type !== 'image/jpeg' && $type !== 'image/webp' && $type !== 'jpg' && $type !== 'png'){
+            if ($type !== 'image/jpeg' && $type !== 'image/webp' && $type !== 'image/jpg' && $type !== 'image/png'){
                 $err = 'Такой формат документов не поддерживается!';
                 return false;
             }
