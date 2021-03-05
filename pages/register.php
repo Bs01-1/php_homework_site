@@ -39,8 +39,8 @@ function checkFormData (RegisterRequest $request, UserRepository $user) {
                 остальные проверки мне тут лень прописывать.';
         return false;
     }
-    else if ($request->city != 'Екатеринбург'){
-        $err = 'Этот сайт функционирует только в Екб, так что пиши в поле города "Екатеринбург".';
+    else if (mb_strlen($request->city) <= 2){
+        $err = 'Город где?';
         return false;
     }
     else if ($date > 2002 || $date < 1910){
@@ -90,8 +90,10 @@ function updateRegisterSession (bool $bool, RegisterRequest $request){
             </div>
             <div>
                 Выберите ваш пол :
-                <input required class="small_input" type="radio" name="sex" value="female"> Женский
-                <input required class="small_input" type="radio" name="sex" value="male"> Мужской
+                <input required class="small_input" type="radio" name="sex" value="female" id="female">
+                <label for="female">Женский</label>
+                <input required class="small_input" type="radio" name="sex" value="male" id="male">
+                <label for="male">Мужской</label>
             </div>
             <div>
                 <input required class="small_input" type="checkbox"> Я прочитал и согласен с пользовательским соглашением

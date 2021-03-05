@@ -25,7 +25,7 @@ class UserRepository extends Repository
         $pass = md5($request->password);
         $sex = $this->connection->real_escape_string($request->sex);
         $city = $this->connection->real_escape_string($request->city);
-        $phone = $this->connection->real_escape_string($request->date);
+        $phone = $this->connection->real_escape_string($request->phone);
         $date = $this->connection->real_escape_string($request->date);
         $nowDate = date('Y-m-d');
 
