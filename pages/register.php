@@ -13,7 +13,7 @@ if (isset($_POST['send_reg'])) {
 
     if (checkFormData($request, $user)){
         if ($user->addNewUser($request)){
-            $_SESSION['auth'] = true;
+            $_SESSION['auth'] = $request->nickname;
             updateRegisterSession(false, $request);
             header("Location: /");
         }
@@ -26,11 +26,11 @@ function checkFormData (RegisterRequest $request, UserRepository $user) {
     $pos = mb_stripos($request->date, '-');
     $date = mb_substr($request->date, 0, $pos);
 
-    if (mb_strlen($request->nick) < 4){
+    if (mb_strlen($request->nickname) < 4){
         $err = 'Ваш никнейм слишком короткий! Измените ник и попробуйте снова.';
         return false;
     }
-    else if (!$user->checkUniqueNick($request->nick)){
+    else if (!$user->checkUniqueNick($request->nickname)){
         $err = 'Такой ник уже есть в нашей базе! Введите другой ник.';
         return false;
     }
@@ -56,7 +56,7 @@ function checkFormData (RegisterRequest $request, UserRepository $user) {
  */
 function updateRegisterSession (bool $bool, RegisterRequest $request){
     if ($bool) {
-        $_SESSION['nick'] = $request->nick;
+        $_SESSION['nick'] = $request->nickname;
         $_SESSION['password'] = $request->password;
         $_SESSION['city'] = $request->city;
         $_SESSION['phone'] = $request->phone;
@@ -76,7 +76,7 @@ function updateRegisterSession (bool $bool, RegisterRequest $request){
     <form method="post" class="register_block_main">
         <span>Регистрация</span>
         <div class="register_block">
-            <input required class="small_input" type="text" name="nick" placeholder="Введите никнейм" value="<?=$_SESSION['nick'] ?? null ?>">
+            <input required class="small_input" type="text" name="nickname" placeholder="Введите никнейм" value="<?=$_SESSION['nick'] ?? null ?>">
             <input required class="small_input" type="password" id="password" name="password" placeholder="Введите пароль"
                    oninput="checkPassword()" value="<?=$_SESSION['password'] ?? null ?>">
             <div class="reg_password_err" id="password_err"></div>

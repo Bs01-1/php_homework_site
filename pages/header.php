@@ -15,7 +15,7 @@ if (isset($_POST['send_login'])){
     $user = new UserRepository($mysqli);
 
     if ($user->checkCorrectPassword($request)){
-        $_SESSION['auth'] = true;
+        $_SESSION['auth'] = $request->nickname;
         header("Location: /");
     }
 

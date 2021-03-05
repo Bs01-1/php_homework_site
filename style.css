@@ -220,7 +220,7 @@ a {
 
 .register_block label, .advertisement_block label { cursor: pointer }
 
-.reg_password_err {
+.reg_password_err, .advertisement_err {
     position: relative;
     bottom: 3px;
     font-size: 12px;

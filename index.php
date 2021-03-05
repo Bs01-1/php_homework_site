@@ -1,4 +1,8 @@
 <?php
+
+use Classes\Repositories\UserRepository;
+use Classes\User;
+
     session_start();
 
     ini_set('error_reporting', E_ALL);
@@ -32,8 +36,9 @@
         return;
     }
 
-    if ($foundPage == 'register.php' && isset($_SESSION['auth'])){
-        $foundPage = 'main.php';
+    if (isset($_SESSION['auth'])){
+        $userRepositories = new UserRepository($mysqli);
+        $user = new User($userRepositories->getOneUser($_SESSION['auth']));
     }
 
     $f = fopen('title.txt', 'r+');

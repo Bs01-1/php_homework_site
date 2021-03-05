@@ -21,7 +21,7 @@ class UserRepository extends Repository
 
     public function addNewUser (RegisterRequest $request): bool
     {
-        $nick = $this->connection->real_escape_string($request->nick);
+        $nick = $this->connection->real_escape_string($request->nickname);
         $pass = md5($request->password);
         $sex = $this->connection->real_escape_string($request->sex);
         $city = $this->connection->real_escape_string($request->city);
@@ -50,5 +50,8 @@ class UserRepository extends Repository
         return false;
     }
 
-
+    public function getOneUser ($nickname) {
+        $nickname = $this->connection->real_escape_string($nickname);
+        return ($this->connection->query("SELECT * FROM users WHERE nickname = '{$nickname}'"))->fetch_assoc();
+    }
 }

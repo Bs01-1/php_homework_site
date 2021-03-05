@@ -47,7 +47,9 @@ function preview (){
     }
 }
 
-function textareaClear (e) { e.innerText = '' }
+function textareaClear (e) {
+    if (e.innerHTML === 'Введите описание недвижимости') e.innerText = ''
+}
 
 let viewLogInBox = false;
 function headerViewLogInBox() {
