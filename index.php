@@ -1,6 +1,7 @@
 <?php
 
 use Classes\Repositories\UserRepository;
+use Classes\Services\UserService;
 use Classes\User;
 
     session_start();
@@ -38,7 +39,8 @@ use Classes\User;
 
     if (isset($_SESSION['auth'])){
         $userRepositories = new UserRepository($mysqli);
-        $user = new User($userRepositories->getOneUser($_SESSION['auth']));
+        $userService = new UserService($userRepositories);
+        $user = $userService->getUserByToken($_SESSION['auth']);
     }
 
     $f = fopen('title.txt', 'r+');

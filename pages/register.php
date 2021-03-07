@@ -2,25 +2,27 @@
 
 use Classes\Repositories\UserRepository;
 use Classes\Request\RegisterRequest;
+use Classes\Services\UserService;
 
 global $mysqli;
 
 if (isset($_POST['send_reg'])) {
     $request = new RegisterRequest($_POST);
-    updateRegisterSession(true, $request);
+    updateRegisterSession(false, $request);
 
-    $user = new UserRepository($mysqli);
+    $userRepository = new UserRepository($mysqli);
+    $userService = new UserService($userRepository);
 
-    if (checkFormData($request, $user)){
-        if ($user->addNewUser($request)){
-            $_SESSION['auth'] = $request->nickname;
-            updateRegisterSession(false, $request);
+    if (checkFormData($request, $userService)){
+        if ($token = $userService->addNewUser($request)){
+            $_SESSION['auth'] = $token;
+            updateRegisterSession(true, $request);
             header("Location: /");
         }
     }
 }
 
-function checkFormData (RegisterRequest $request, UserRepository $user) {
+function checkFormData (RegisterRequest $request, UserService $userService) {
     global $err;
 
     $pos = mb_stripos($request->date, '-');
@@ -30,7 +32,7 @@ function checkFormData (RegisterRequest $request, UserRepository $user) {
         $err = 'Ваш никнейм слишком короткий! Измените ник и попробуйте снова.';
         return false;
     }
-    else if (!$user->checkUniqueNick($request->nickname)){
+    else if (!$userService->isUniqueNick($request->nickname)){
         $err = 'Такой ник уже есть в нашей базе! Введите другой ник.';
         return false;
     }
@@ -51,11 +53,11 @@ function checkFormData (RegisterRequest $request, UserRepository $user) {
 }
 
 /**
- * @param bool $bool - true - добавить сессии регистрации, false - обнулись сессии.
+ * @param bool $reloadSession - true - добавить сессии регистрации, false - обнулись сессии.
  * @param RegisterRequest $request
  */
-function updateRegisterSession (bool $bool, RegisterRequest $request){
-    if ($bool) {
+function updateRegisterSession (bool $reloadSession, RegisterRequest $request){
+    if (!$reloadSession) {
         $_SESSION['nick'] = $request->nickname;
         $_SESSION['password'] = $request->password;
         $_SESSION['city'] = $request->city;

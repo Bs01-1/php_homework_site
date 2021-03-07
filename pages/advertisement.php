@@ -21,8 +21,8 @@ if (isset($_POST['send_advertisement']) && $_FILES){
             $advertisement = new Advertisement($advertisementRepository->getLastUserAdvertisement($user));
 
             if ($advertisement->addNewAdvertisementImg($imgRequest)){
-//                header("Location: /");
-//                return;
+                header("Location: /");
+                return;
             }
         }
     }

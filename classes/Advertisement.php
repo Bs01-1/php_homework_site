@@ -6,7 +6,7 @@ namespace Classes;
 
 use Classes\Request\ImgRequest;
 
-class Advertisement
+class Advertisement extends Model
 {
     public int $id;
     public int $user_id;
@@ -14,16 +14,6 @@ class Advertisement
     public string $address;
     public string $about;
     public string $type;
-
-    public function __construct(array $advertisement)
-    {
-        $this->id = $advertisement['id'];
-        $this->user_id = $advertisement['user_id'];
-        $this->title = $advertisement['title'];
-        $this->address = $advertisement['address'];
-        $this->about = $advertisement['about'];
-        $this->type = $advertisement['type'];
-    }
 
     public function addNewAdvertisementImg (ImgRequest $imgRequest): bool
     {

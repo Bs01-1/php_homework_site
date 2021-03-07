@@ -5,21 +5,11 @@ namespace Classes\Repositories;
 
 
 use Classes\Request\RegisterRequest;
-use Classes\Request\AuthRequest;
+use Classes\User;
 
-class UserRepository extends Repository
+class UserRepository extends Repository implements UserRepositoryInterface
 {
-    public function checkUniqueNick(string $nick): bool
-    {
-        $nick = $this->connection->real_escape_string($nick);
-        $result = $this->connection->query("SELECT nickname FROM users WHERE nickname = '{$nick}'");
-        if ($result->num_rows >= 1) {
-            return false;
-        }
-        return true;
-    }
-
-    public function addNewUser (RegisterRequest $request): bool
+    public function createUser(RegisterRequest $request, string $token): bool
     {
         $nick = $this->connection->real_escape_string($request->nickname);
         $pass = md5($request->password);
@@ -27,31 +17,50 @@ class UserRepository extends Repository
         $city = $this->connection->real_escape_string($request->city);
         $phone = $this->connection->real_escape_string($request->phone);
         $date = $this->connection->real_escape_string($request->date);
-        $nowDate = date('Y-m-d');
 
-        $result = $this->connection->query("INSERT INTO users (nickname, password, gender, city, phone, date, createdAt)
+        $result = $this->connection->query("INSERT INTO users (nickname, password, gender, city, phone, date, token)
             VALUES ('{$nick}', '{$pass}', '{$sex}', '{$city}', 
-            '{$phone}', '{$date}', '{$nowDate}')");
-
-        if ($request) {
-            return true;
-        }
-        return false;
+            '{$phone}', '{$date}', '{$token}')");
+        return (bool) $result;
     }
 
-    public function checkCorrectPassword (AuthRequest $request) {
-        $nick = $this->connection->real_escape_string($request->nickname);
-        $password = md5($request->password);
-
-        $result = $this->connection->query("SELECT nickname FROM users WHERE nickname = '{$nick}' AND password = '{$password}'");
-        if (($result ->fetch_assoc())['nickname'] == $nick){
-            return true;
-        }
-        return false;
-    }
-
-    public function getOneUser ($nickname) {
+    public function getUserByNicknameAndPassword(string $nickname, string $password): ?User
+    {
         $nickname = $this->connection->real_escape_string($nickname);
-        return ($this->connection->query("SELECT * FROM users WHERE nickname = '{$nickname}'"))->fetch_assoc();
+        $password = md5($password);
+
+        $result = $this->connection->query("SELECT * FROM users WHERE nickname = '{$nickname}' AND password = '{$password}'");
+        if (!$result || $result->num_rows < 1){
+            return null;
+        }
+        $resultArray = $result->fetch_assoc();
+        $result->free_result();
+        return User::createFromArray($resultArray);
+    }
+
+    public function getUserByNickname(string $nickname): ?User
+    {
+        $nickname = $this->connection->real_escape_string($nickname);
+
+        $result = $this->connection->query("SELECT * FROM users WHERE nickname = '{$nickname}' LIMIT 1");;
+        if (!$result || $result->num_rows < 1){
+            return null;
+        }
+        $resultArray = $result->fetch_assoc();
+        $result->free_result();
+        return User::createFromArray($resultArray);
+    }
+
+    public function getUserByToken(string $token): ?User
+    {
+        $token = $this->connection->real_escape_string($token);
+
+        $result = $this->connection->query("SELECT * FROM users WHERE token = '{$token}' LIMIT 1");;
+        if (!$result || $result->num_rows < 1){
+            return null;
+        }
+        $resultArray = $result->fetch_assoc();
+        $result->free_result();
+        return User::createFromArray($resultArray);
     }
 }
