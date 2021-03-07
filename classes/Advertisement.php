@@ -15,6 +15,18 @@ class Advertisement extends Model
     public string $about;
     public string $type;
 
+    public static function createFromArray(array $params): self
+    {
+        $model = new self();
+        foreach ($params as $key => $param){
+
+            if (property_exists($model, $key)){
+                $model->$key = $param;
+            }
+        }
+        return $model;
+    }
+
     public function addNewAdvertisementImg (ImgRequest $imgRequest): bool
     {
         if ($imgRequest->name[0] === ''){

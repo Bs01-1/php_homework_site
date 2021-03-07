@@ -4,6 +4,7 @@ use Classes\Advertisement;
 use Classes\Repositories\AdvertisementRepository;
 use Classes\Request\AdvertisementRequest;
 use Classes\Request\ImgRequest;
+use Classes\Services\AdvertisementService;
 
 global $mysqli;
 
@@ -16,9 +17,13 @@ if (isset($_POST['send_advertisement']) && $_FILES){
         global $user;
 
         $advertisementRepository = new AdvertisementRepository($mysqli);
-        if ($advertisementRepository->addNewAdvertisement($advertisementRequest, $user)){
+        $advertisementService = new AdvertisementService($advertisementRepository);
+
+        if ($advertisementService->createAdvertisement($advertisementRequest, $user)){
             updateAdvertisementSession(false, $advertisementRequest);
-            $advertisement = new Advertisement($advertisementRepository->getLastUserAdvertisement($user));
+
+            $advertisement = new Advertisement();
+            $advertisement = $advertisementService->getLastUserAdvertisement($user);
 
             if ($advertisement->addNewAdvertisementImg($imgRequest)){
                 header("Location: /");
