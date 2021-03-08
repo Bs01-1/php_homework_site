@@ -2,6 +2,7 @@
 
 use Classes\Repositories\UserRepository;
 use Classes\Request\AuthRequest;
+use Classes\Services\UserService;
 
 global $mysqli;
 
@@ -12,10 +13,11 @@ if (isset($_POST['logout'])){
 
 if (isset($_POST['send_login'])){
     $request = new AuthRequest($_POST);
-    $user = new UserRepository($mysqli);
+    $userRepository = new UserRepository($mysqli);
+    $userService = new UserService($userRepository);
 
-    if ($user->checkCorrectPassword($request)){
-        $_SESSION['auth'] = true;
+    if ($user = $userService->authAttempt($request)){
+        $_SESSION['auth'] = $user->token;
         header("Location: /");
     }
 

@@ -31,6 +31,26 @@ function backgroundColor() {
     }, 150);
 }
 
+function preview (){
+    let file = document.querySelector('#advertisement_img');
+    if (file.files.length === 0)
+        return;
+
+    let img_block = document.querySelector('#preview');
+    img_block.innerHTML = '';
+
+    for (let i = 0; i < file.files.length; i++){
+        let img = [];
+        img[i] = document.createElement('img');
+        img[i].src = URL.createObjectURL(file.files[i]);
+        img_block.appendChild(img[i]);
+    }
+}
+
+function textareaClear (e) {
+    if (e.innerHTML === 'Введите описание недвижимости') e.innerText = ''
+}
+
 let viewLogInBox = false;
 function headerViewLogInBox() {
     let logInBox = document.querySelector('.header_login_box');

@@ -1,4 +1,9 @@
 <?php
+
+use Classes\Repositories\UserRepository;
+use Classes\Services\UserService;
+use Classes\User;
+
     session_start();
 
     ini_set('error_reporting', E_ALL);
@@ -13,7 +18,8 @@
     $routes = [
         ['url' => '/register', 'path' => 'register.php'],
         ['url' => '/advertisement', 'path' => 'advertisement.php'],
-        ['url' => '/', 'path' => 'main.php']
+        ['url' => '/', 'path' => 'main.php'],
+        ['url' => '/info.php', 'path' => 'info.php']
     ];
 
     $requestUrl = $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?? null;
@@ -32,14 +38,25 @@
         return;
     }
 
-    if ($foundPage == 'register.php' && isset($_SESSION['auth'])){
-        $foundPage = 'main.php';
+    if (isset($_SESSION['auth'])){
+        $userRepositories = new UserRepository($mysqli);
+        $userService = new UserService($userRepositories);
+        $user = $userService->getUserByToken($_SESSION['auth']);
     }
 
+    $f = fopen('title.txt', 'r+');
+    $title = file_get_contents('title.txt');
+    fclose($f);
+    $pos = mb_strripos($title, $foundPage);
+    $title = mb_substr($title, $pos);
+    $pos = mb_strpos($title, '=');
+    $title = mb_substr($title, $pos + 1);
+    $pos = mb_strpos ($title, ';');
+    $title = mb_substr($title, 0, $pos);
 ?>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Скоро...</title>
+    <title><?=$title ?></title>
     <link rel="shortout icon" href="/img/favicon.png" type="image/png">
     <link href="https://fonts.googleapis.com/css?family=Comfortaa&display=swap" rel="stylesheet">
     <link rel="stylesheet" href='/style.css'>

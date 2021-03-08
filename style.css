@@ -13,6 +13,21 @@ a {
     color: black;
 }
 
+::-webkit-scrollbar {
+    width: 24px;
+    height: 8px;
+    background-color: white;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgb(200, 200, 200);
+    border-radius: 9em;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(180, 180, 180);
+}
+
 .img_small {
     width: 20px;
     height: 20px;
@@ -151,6 +166,7 @@ a {
 }
 
 .footer_btn_box_bottom:hover {color: rgb(250, 250, 250);}
+.footer_btn_box_bottom a:hover {color: rgb(250, 250, 250);}
 
 .footer_contacts_hover:hover .footer_contacts_info_block { display: block }
 .footer_contacts_info_block:hover { display: block }
@@ -181,18 +197,18 @@ a {
 
 /* Начало контента регистрации */
 
-.register_block_main {
+.register_block_main, .advertisement_block_main {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.register_block_main span {
+.register_block_main span, .advertisement_block_main span {
     font-size: 22px;
     margin: 25px;
 }
 
-.register_block {
+.register_block, .advertisement_block {
     display: flex;
     flex-direction: column;
     justify-content: left;
@@ -203,7 +219,9 @@ a {
     border-radius: 8px;
 }
 
-.reg_password_err {
+.register_block label, .advertisement_block label { cursor: pointer }
+
+.reg_password_err, .advertisement_err {
     position: relative;
     bottom: 3px;
     font-size: 12px;
@@ -212,4 +230,94 @@ a {
 
 .reg_password_err_true {
     color: green;
+}
+
+.advertisement_textarea {
+    resize: none;
+    height: 250px;
+}
+
+.advertisement_img_block {
+    display: flex;
+    align-items: center;
+    height: 60px;
+}
+
+.advertisement_img_btn {
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.advertisement_img_preview {
+    display: flex;
+    justify-content: center;
+    overflow-y: auto;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.advertisement_img_preview img {
+    width: 24%;
+    margin: 2px;
+    border-radius: 3px;
+}
+
+.return_404_block {
+    display: flex;
+    flex-direction: column;
+    background: rgb(237, 237, 237);
+    align-items: center;
+    padding: 50px;
+}
+
+.return_404_text {
+    font-size: 25px;
+    padding: 10px;
+}
+
+.return_404 {
+    color: red;
+    cursor: pointer;
+}
+
+.info_block {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 50px 0;
+}
+
+.info_termsOfUse_block {
+    width: 55%;
+    display: flex;
+    flex-direction: column;
+}
+
+.info_termsOfUse_title {
+    display: flex;
+    justify-content: center;
+    color: rgb(255, 100, 100);
+    font-size: 22px;
+    padding: 20px;
+    border-radius: 3px;
+    border-top: 1px solid rgb(200, 200, 200);
+    border-bottom: 1px solid rgb(200, 200, 200);
+    background: rgb(237, 237, 237);
+}
+
+.info_termsOfUse_content {
+    display: flex;
+    flex-direction: column;
+    background: rgb(242, 242, 242);
+    margin-top: 15px;
+    padding: 10px;
+    font-size: 14px;
+}
+
+.info_termsOfUse_content b, .info_termsOfUse_content p {
+    margin-top: 7px;
+}
+
+.info_termsOfUse_content hr, .info_termsOfUse_content h4 {
+    margin: 10px;
 }
