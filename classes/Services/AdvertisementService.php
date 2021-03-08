@@ -5,6 +5,8 @@ namespace Classes\Services;
 
 
 use Classes\Advertisement;
+use Classes\Collections\AdvertisementCollection;
+use Classes\Core\Paginator;
 use Classes\Repositories\AdvertisementRepositoryInterface;
 use Classes\Request\AdvertisementRequest;
 use Classes\User;
@@ -26,5 +28,10 @@ class AdvertisementService
     public function getLastUserAdvertisement(User $user): ?Advertisement
     {
         return $this->advertisementRepository->getLastUserAdvertisement($user);
+    }
+
+    public function getAdvertisements(Paginator $paginator): AdvertisementCollection
+    {
+        return $this->advertisementRepository->getAdvertisementByLimitAndOffset($paginator->getCount(), $paginator->getOffset());
     }
 }

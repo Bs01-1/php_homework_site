@@ -5,6 +5,7 @@ namespace Classes\Repositories;
 
 
 use Classes\Advertisement;
+use Classes\Collections\AdvertisementCollection;
 use Classes\Request\AdvertisementRequest;
 use Classes\User;
 
@@ -29,5 +30,16 @@ class AdvertisementRepository extends Repository implements AdvertisementReposit
         $resultArray = $advertisement->fetch_assoc();
         $advertisement->free_result();
         return Advertisement::createFromArray($resultArray);
+    }
+
+    public function getAdvertisementByLimitAndOffset(int $limit, int $offset): AdvertisementCollection
+    {
+        $result = $this->connection->query("SELECT * FROM advertisement ORDER BY createdAt DESC LIMIT {$limit} OFFSET {$offset}");
+
+        $advertisementCollection = new AdvertisementCollection();
+        while ($advertisementArray = $result->fetch_assoc()) {
+            $advertisementCollection->addItem(Advertisement::createFromArray($advertisementArray));
+        }
+        return $advertisementCollection;
     }
 }
