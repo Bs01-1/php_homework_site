@@ -18,7 +18,8 @@ use Classes\User;
     $routes = [
         ['url' => '/register', 'path' => 'register.php'],
         ['url' => '/advertisement', 'path' => 'advertisement.php'],
-        ['url' => '/', 'path' => 'main.php']
+        ['url' => '/', 'path' => 'main.php'],
+        ['url' => '/info.php', 'path' => 'info.php']
     ];
 
     $requestUrl = $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?? null;

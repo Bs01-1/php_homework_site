@@ -8,7 +8,7 @@ class Model
 {
     public static function createFromArray(array $params): self
     {
-        $model = new self();
+        $model = new static();
         foreach ($params as $key => $param){
 
             if (property_exists($model, $key)){

@@ -2,7 +2,6 @@
 
 namespace Classes;
 
-use Classes\Repositories\UserRepository;
 
 class User extends Model
 {
@@ -14,16 +13,4 @@ class User extends Model
     public string $date;
     public string $sex;
     public string $token;
-
-    public static function createFromArray(array $params): self
-    {
-        $model = new self();
-        foreach ($params as $key => $param){
-
-            if (property_exists($model, $key)){
-                $model->$key = $param;
-            }
-        }
-        return $model;
-    }
 }
