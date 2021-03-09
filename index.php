@@ -49,7 +49,7 @@ use Classes\Services\UserService;
     }
 
     if (!$foundPage) {
-        require rootPath . '/pages/404.php';
+        require rootPath . $config->getByKey('paths.404_page');
         return;
     }
 

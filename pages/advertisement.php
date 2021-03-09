@@ -1,6 +1,7 @@
 <?php
 
 use Classes\Advertisement;
+use Classes\Advertisement\FileManager;
 use Classes\Repositories\AdvertisementRepository;
 use Classes\Request\AdvertisementRequest;
 use Classes\Request\ImgRequest;
@@ -11,9 +12,24 @@ global $mysqli;
 if (isset($_POST['send_advertisement']) && $_FILES){
     $imgRequest = new ImgRequest($_FILES['imgs']);
     $advertisementRequest = new AdvertisementRequest($_POST);
+    $fileManager = new FileManager();
     updateAdvertisementSession(true, $advertisementRequest);
 
-    if (checkFormData($advertisementRequest, $imgRequest)){
+    if (mb_strlen($advertisementRequest->title) <= 8){
+        $err = 'Заголовок слишком короткий!';
+    } else if (mb_strlen($advertisementRequest->address) <= 10){
+        $err = 'Адрес слишком короткий!';
+    } else if ($advertisementRequest->about === 'Введите описание недвижимости' || mb_strlen($advertisementRequest->about) <= 30){
+        $err = 'Описание слишком короткое!';
+    } else if (count($imgRequest->name) > 10) {
+        $err = 'Слишком много документов! Можно не более 10';
+    } else if (!$fileManager->isCorrectFormat($imgRequest)){
+        $err = 'Такой формат документов не поддерживается!';
+    } else if (!$fileManager->isCorrectSize($imgRequest)){
+        $err = 'Слишком большой документ';
+    }
+
+    if (!isset($err)){
         global $user;
 
         $advertisementRepository = new AdvertisementRepository($mysqli);
@@ -25,45 +41,12 @@ if (isset($_POST['send_advertisement']) && $_FILES){
             $advertisement = new Advertisement();
             $advertisement = $advertisementService->getLastUserAdvertisement($user);
 
-            if ($advertisement->addNewAdvertisementImg($imgRequest)){
+            if ($fileManager->addNewAdvertisementImg($imgRequest, $advertisement)){
                 header("Location: /");
                 return;
             }
         }
     }
-}
-
-function checkFormData(AdvertisementRequest $advertisementRequest, ImgRequest $imgRequest): bool
-{
-    global $err;
-
-    if (mb_strlen($advertisementRequest->title) <= 8){
-        $err = 'Заголовок слишком короткий!';
-        return false;
-    } else if (mb_strlen($advertisementRequest->address) <= 10){
-        $err = 'Адрес слишком короткий!';
-        return false;
-    } else if ($advertisementRequest->about === 'Введите описание недвижимости' || mb_strlen($advertisementRequest->about) <= 30){
-        $err = 'Описание слишком короткое!';
-        return false;
-    } else if (count($imgRequest->name) > 10) {
-        $err = 'Слишком много документов! Можно не более 10';
-        return false;
-    } else if ($imgRequest->name[0] !== ''){
-        foreach ($imgRequest->type as $type) {
-            if ($type !== 'image/jpeg' && $type !== 'image/webp' && $type !== 'jpg' && $type !== 'png'){
-                $err = 'Такой формат документов не поддерживается!';
-                return false;
-            }
-        }
-        foreach ($imgRequest->size as $size){
-            if ($size >= 2097152){
-                $err = 'Слишком большой документ';
-                return false;
-            }
-        }
-    }
-    return true;
 }
 
 function updateAdvertisementSession (bool $bool, AdvertisementRequest $advertisementRequest){
