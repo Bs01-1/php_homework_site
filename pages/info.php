@@ -5,15 +5,17 @@ use Classes\Services\InfoServices;
 
 global $mysqli;
 
-$termsOfUseRepository = new InfoRepository($mysqli);
-$termsOfUseService = new InfoServices($termsOfUseRepository);
-$termsOfUse = $termsOfUseService->getInfo('termsOfUse');
+$infoRepository = new InfoRepository($mysqli);
+$infoService = new InfoServices($infoRepository);
+$infoCollection = $infoService->getAll();
 
 ?>
 
 <div class="info_block">
-    <div class="info_termsOfUse_block" id="rule">
-        <div class="info_termsOfUse_title"><?=$termsOfUse->title ?? null?></div>
-        <div class="info_termsOfUse_content"><?=$termsOfUse->content ?? null?></div>
-    </div>
+    <?php foreach ($infoCollection as $item): ?>
+         <div class="info_content_block" id="<?=$item->name?>">
+                <div class="info_title"><?=$item->title ?? null?></div>
+                <div class="info_content"><?=$item->content ?? null?></div>
+         </div>
+    <?php endforeach; ?>
 </div>

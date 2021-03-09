@@ -1,8 +1,8 @@
 <?php
 
+use Classes\Core\Config;
 use Classes\Repositories\UserRepository;
 use Classes\Services\UserService;
-use Classes\User;
 
     session_start();
 
@@ -10,16 +10,24 @@ use Classes\User;
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
 
-    $mysqli = new mysqli('localhost', 'ilya', 'Qdwdqx1233!', 'realty');
     const rootPath = '/var/www/html/php_homework_site';
     require rootPath.'/vendor/autoload.php';
+
+    $config = Config::getInstance();
+    $mysqli = new mysqli(
+            $config->getByKey('mysql.host'),
+            $config->getByKey('mysql.name'),
+            $config->getByKey('mysql.password'),
+            $config->getByKey('mysql.db_name')
+    );
     $foundPage = null;
 
     $routes = [
         ['url' => '/register', 'path' => 'register.php'],
         ['url' => '/advertisement', 'path' => 'advertisement.php'],
         ['url' => '/', 'path' => 'main.php'],
-        ['url' => '/info.php', 'path' => 'info.php']
+        ['url' => '/info', 'path' => 'info.php'],
+        ['url' => '/api/get_advertisement', 'path' => 'api/advertisement.php', 'methods' => ['POST'], 'ajax' => true]
     ];
 
     $requestUrl = $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?? null;
@@ -27,9 +35,16 @@ use Classes\User;
         return;
     }
 
+    $isAjax = false;
     foreach ($routes as $route){
         if ($route['url'] == $requestUrl){
             $foundPage = $route['path'];
+            if (!empty($route['methods']) && !in_array($_SERVER['REQUEST_METHOD'], $route['methods'])) {
+                $foundPage = null;
+            }
+            if (!empty($route['ajax'])) {
+                $isAjax = $route['ajax'];
+            }
         }
     }
 
@@ -54,6 +69,7 @@ use Classes\User;
     $pos = mb_strpos ($title, ';');
     $title = mb_substr($title, 0, $pos);
 ?>
+<?php if (!$isAjax): ?>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title><?=$title ?></title>
@@ -61,11 +77,14 @@ use Classes\User;
     <link href="https://fonts.googleapis.com/css?family=Comfortaa&display=swap" rel="stylesheet">
     <link rel="stylesheet" href='/style.css'>
 </head>
-<div class="main-wrapper">
-    <?php
-        require rootPath . '/pages/header.php';
-        require rootPath . '/pages/' . $foundPage;
-        require rootPath . '/pages/footer.php';
-    ?>
-</div>
+<?php endif; ?>
 
+<?php
+    if (!$isAjax) {
+        require rootPath . '/pages/header.php';
+    }
+    require rootPath . '/pages/' . $foundPage;
+    if (!$isAjax) {
+        require rootPath . '/pages/footer.php';
+    }
+?>
