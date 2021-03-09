@@ -3,6 +3,7 @@
 
 namespace Classes\Repositories;
 
+use Classes\Collections\InfoCollection;
 use Classes\Info;
 
 class InfoRepository extends Repository implements InfoRepositoryInterface
@@ -17,5 +18,18 @@ class InfoRepository extends Repository implements InfoRepositoryInterface
         $resultArray = $result->fetch_assoc();
         $result->free_result();
         return Info::createFromArray($resultArray);
+    }
+
+    public function getAll(): InfoCollection
+    {
+        $result = $this->connection->query("SELECT * FROM info");
+
+        $infoCollection = new InfoCollection();
+        while ($resultArray = $result->fetch_assoc()){
+                $infoCollection->addItem(Info::createFromArray($resultArray));
+        }
+        $result->free_result();
+
+        return $infoCollection;
     }
 }

@@ -98,7 +98,8 @@ function updateRegisterSession (bool $reloadSession, RegisterRequest $request){
                 <label for="male">Мужской</label>
             </div>
             <div>
-                <input required class="small_input" type="checkbox"> Я прочитал и согласен с пользовательским соглашением
+                <input required class="small_input" type="checkbox"> Я прочитал и согласен с
+                <a href="info#rule">пользовательским соглашением</a>
             </div>
             <div class="reg_password_err"><?=$err ?? null ?></div>
             <input class="small_input" id="sumbit_reg" name="send_reg" type="submit" value="Продолжить">
