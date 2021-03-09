@@ -24,9 +24,10 @@ use Classes\Services\UserService;
 
     $routes = [
         ['url' => '/register', 'path' => 'register.php'],
-        ['url' => '/advertisement', 'path' => 'advertisement.php'],
+        ['url' => '/add_advertisement', 'path' => 'addAdvertisement.php'],
         ['url' => '/', 'path' => 'main.php'],
         ['url' => '/info', 'path' => 'info.php'],
+        ['url' => '/sale', 'path' => 'advertisement.php'],
         ['url' => '/api/get_advertisement', 'path' => 'api/advertisement.php', 'methods' => ['POST'], 'ajax' => true]
     ];
 
@@ -83,7 +84,9 @@ use Classes\Services\UserService;
     if (!$isAjax) {
         require rootPath . '/pages/header.php';
     }
+
     require rootPath . '/pages/' . $foundPage;
+
     if (!$isAjax) {
         require rootPath . '/pages/footer.php';
     }

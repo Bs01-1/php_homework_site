@@ -5,9 +5,7 @@ namespace Classes\Advertisement;
 
 
 use Classes\Advertisement;
-use Classes\Core\Config;
 use Classes\Request\ImgRequest;
-use Classes\User;
 
 class FileManager
 {
@@ -54,6 +52,7 @@ class FileManager
         }
         for ($i = 0; $i < count($imgRequest->name); $i++){
 
+            $nameNumber = '';
             switch ($imgRequest->type[$i]) {
                 case "image/jpeg":
                     $nameNumber = microtime(true) . ".jpeg";
@@ -69,7 +68,7 @@ class FileManager
                     break;
             }
 
-            move_uploaded_file($imgPath . '/', $nameNumber);
+            move_uploaded_file($imgRequest->tmp_name[$i], $imgPath . '/' . $nameNumber);
         }
         return true;
     }
