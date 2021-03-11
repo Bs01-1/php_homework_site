@@ -197,18 +197,19 @@ a {
 
 /* Начало контента регистрации */
 
-.register_block_main, .advertisement_block_main {
+.register_block_main, .add_advertisement_block_main, .advertisement_block_main {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: 50px 0;
 }
 
-.register_block_main span, .advertisement_block_main span {
+.register_block_main span, .add_advertisement_block_main span {
     font-size: 22px;
     margin: 25px;
 }
 
-.register_block, .advertisement_block {
+.register_block, .add_advertisement_block {
     display: flex;
     flex-direction: column;
     justify-content: left;
@@ -221,7 +222,7 @@ a {
 
 .register_block div a { color: rgb(251, 66, 66) }
 
-.register_block label, .advertisement_block label { cursor: pointer }
+.register_block label, .add_advertisement_block label { cursor: pointer }
 
 .reg_password_err, .advertisement_err {
     position: relative;
@@ -234,23 +235,23 @@ a {
     color: green;
 }
 
-.advertisement_textarea {
+.add_advertisement_textarea {
     resize: none;
     height: 250px;
 }
 
-.advertisement_img_block {
+.add_advertisement_img_block {
     display: flex;
     align-items: center;
     height: 60px;
 }
 
-.advertisement_img_btn {
+.add_advertisement_img_btn {
     margin-left: 10px;
     cursor: pointer;
 }
 
-.advertisement_img_preview {
+.add_advertisement_img_preview {
     display: flex;
     justify-content: center;
     overflow-y: auto;
@@ -258,7 +259,7 @@ a {
     margin-bottom: 20px;
 }
 
-.advertisement_img_preview img {
+.add_advertisement_img_preview img {
     width: 24%;
     margin: 2px;
     border-radius: 3px;
@@ -328,4 +329,43 @@ a {
 
 .info_content ol {
     margin: 10px 30px;
+}
+
+.advertisement_block {
+    display: flex;
+    flex-direction: row;
+    width: 45%;
+    margin-bottom: 15px;
+    background: rgb(255, 255, 230);
+    padding: 15px;
+}
+
+.advertisement_img_block {
+    width: 310px;
+    min-width: 310px;
+    max-height: 500px;
+    border-right: 1px solid rgb(205, 205, 205);
+}
+
+.advertisement_img_block img {
+    max-width: 300px;
+    border-radius: 8px;
+}
+
+.advertisement_content_block {
+    margin-left: 10px;
+}
+
+.advertisement_block a {
+    width: 100%;
+}
+
+.advertisement_content_title {
+    word-break:break-all;
+    overflow-y: hidden;
+    width: 100%;
+    max-width: 100%;
+    font-size: 17px;
+    background: white;
+    padding: 5px 10px;
 }

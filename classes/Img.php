@@ -4,7 +4,7 @@
 namespace Classes;
 
 
-class Images
+class Img
 {
 
 }

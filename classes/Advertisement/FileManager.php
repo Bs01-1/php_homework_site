@@ -5,6 +5,9 @@ namespace Classes\Advertisement;
 
 
 use Classes\Advertisement;
+use Classes\Collections\AdvertisementCollection;
+use Classes\Core\Config;
+use Classes\Img;
 use Classes\Request\ImgRequest;
 
 class FileManager
@@ -38,7 +41,8 @@ class FileManager
             return false;
         }
 
-        $imgPath = rootPath . '/img/advertisement/'
+        $imgPath = Config::getInstance();
+        $imgPath = rootPath . $imgPath->getByKey('paths.img_advertisement') . '/'
             . $advertisement->type . '/'
             . $advertisement->user_id;
 
@@ -71,5 +75,24 @@ class FileManager
             move_uploaded_file($imgRequest->tmp_name[$i], $imgPath . '/' . $nameNumber);
         }
         return true;
+    }
+
+    public function getFirstImgPathByAdvertisement(Advertisement $advertisement): string
+    {
+        $imgPath = Config::getInstance();
+        $defaultImgPath = $imgPath->getByKey('paths.img_advertisement');
+        $existImgPath = $defaultImgPath . '/' .
+            $advertisement->type . '/' . $advertisement->user_id . '/' . $advertisement->id;
+
+        if (!file_exists(rootPath . $existImgPath)){
+            return $defaultImgPath . '/img_not_found.jpg';
+        }
+
+        $imgDir = scandir(rootPath . $existImgPath);
+        if (count($imgDir) <= 2) {
+            return $defaultImgPath . '/img_not_found.jpg';
+        }
+
+        return $existImgPath . '/' . $imgDir[3];
     }
 }

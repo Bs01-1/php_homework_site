@@ -29,7 +29,7 @@ if (isset($_POST['send_login'])){
         <div class="header_paths">
             <div class="header_path_box">
                 <a href="/"><img title="На главную" class="header_logo" src="/img/header/icon.ico" alt=''></a>
-                <div class="header_path"><a href="">Аренда</a></div>
+                <div class="header_path"><a href="rentals">Аренда</a></div>
                 <div class="header_path"><a href="sale">Продажа</a></div>
             </div>
             <?php if($_SESSION['auth'] ?? null): ?>

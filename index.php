@@ -27,8 +27,9 @@ use Classes\Services\UserService;
         ['url' => '/add_advertisement', 'path' => 'addAdvertisement.php'],
         ['url' => '/', 'path' => 'main.php'],
         ['url' => '/info', 'path' => 'info.php'],
-        ['url' => '/sale', 'path' => 'advertisement.php'],
-        ['url' => '/api/get_advertisement', 'path' => 'api/advertisement.php', 'methods' => ['POST'], 'ajax' => true]
+        ['url' => '/sale', 'path' => 'content.php'],
+        ['url' => '/rentals', 'path' => 'content.php'],
+        ['url' => '/api/get_advertisement', 'path' => 'api/content.php', 'methods' => ['POST'], 'ajax' => true]
     ];
 
     $requestUrl = $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?? null;

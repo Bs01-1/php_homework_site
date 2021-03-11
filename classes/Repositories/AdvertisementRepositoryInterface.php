@@ -6,6 +6,7 @@ namespace Classes\Repositories;
 
 use Classes\Collections\AdvertisementCollection;
 use Classes\Request\AdvertisementRequest;
+use Classes\Request\GetAdvertisementRequest;
 use Classes\User;
 
 interface AdvertisementRepositoryInterface
@@ -14,5 +15,9 @@ interface AdvertisementRepositoryInterface
 
     public function getLastUserAdvertisement(User $user);
 
-    public function getAdvertisementByLimitAndOffset(int $limit, int $offset): AdvertisementCollection;
+    public function getAdvertisementByLimitAndOffset(
+        int $limit,
+        int $offset,
+        GetAdvertisementRequest $advertisementRequest
+    ): AdvertisementCollection;
 }
