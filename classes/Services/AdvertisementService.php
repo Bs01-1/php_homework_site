@@ -34,7 +34,7 @@ class AdvertisementService
     public function getAdvertisements(
         Paginator $paginator,
         GetAdvertisementRequest $advertisementRequest
-    ): AdvertisementCollection
+    ): ?AdvertisementCollection
     {
         return $this->advertisementRepository->getAdvertisementByLimitAndOffset($paginator->getCount(), $paginator->getOffset(), $advertisementRequest);
     }

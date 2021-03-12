@@ -27,9 +27,10 @@ use Classes\Services\UserService;
         ['url' => '/add_advertisement', 'path' => 'addAdvertisement.php'],
         ['url' => '/', 'path' => 'main.php'],
         ['url' => '/info', 'path' => 'info.php'],
-        ['url' => '/sale', 'path' => 'content.php'],
-        ['url' => '/rentals', 'path' => 'content.php'],
-        ['url' => '/api/get_advertisement', 'path' => 'api/content.php', 'methods' => ['POST'], 'ajax' => true]
+        ['url' => '/sale', 'path' => 'advertisement.php'],
+        ['url' => '/rentals', 'path' => 'advertisement.php'],
+        ['url' => '/api/get_advertisement', 'path' => 'api/get_advertisement.php', 'methods' => ['POST'], 'ajax' => true],
+        ['url' => '/api/add_notification', 'path' => 'api/add_notification.php', 'methods' => ['POST'], 'ajax' => true]
     ];
 
     $requestUrl = $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?? null;
@@ -76,7 +77,8 @@ use Classes\Services\UserService;
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title><?=$title ?></title>
     <link rel="shortout icon" href="/img/favicon.png" type="image/png">
-    <link href="https://fonts.googleapis.com/css?family=Comfortaa&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href='/style.css'>
 </head>
 <?php endif; ?>
@@ -84,10 +86,9 @@ use Classes\Services\UserService;
 <?php
     if (!$isAjax) {
         require rootPath . '/pages/header.php';
+        require rootPath . '/pages/notifications.php';
     }
-
     require rootPath . '/pages/' . $foundPage;
-
     if (!$isAjax) {
         require rootPath . '/pages/footer.php';
     }

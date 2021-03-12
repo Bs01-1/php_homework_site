@@ -19,5 +19,5 @@ interface AdvertisementRepositoryInterface
         int $limit,
         int $offset,
         GetAdvertisementRequest $advertisementRequest
-    ): AdvertisementCollection;
+    ): ?AdvertisementCollection;
 }

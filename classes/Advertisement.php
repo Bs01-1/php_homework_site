@@ -14,4 +14,5 @@ class Advertisement extends Model
     public string $about;
     public string $type;
     public string $rating;
+    public int $price;
 }

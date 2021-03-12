@@ -93,6 +93,6 @@ class FileManager
             return $defaultImgPath . '/img_not_found.jpg';
         }
 
-        return $existImgPath . '/' . $imgDir[3];
+        return $existImgPath . '/' . $imgDir[2];
     }
 }
