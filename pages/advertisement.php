@@ -1,107 +1,85 @@
-<?php
+<div class="advertisement_block_main">
 
-use Classes\Advertisement;
-use Classes\Repositories\AdvertisementRepository;
-use Classes\Request\AdvertisementRequest;
-use Classes\Request\ImgRequest;
-use Classes\Services\AdvertisementService;
+</div>
+<div class="advertisement_more_advertisements_block">
+    <div class="advertisement_more_advertisements" onclick="paginator()">Добавить объявления!</div>
+</div>
+<script type="text/javascript">
+    let page = 0;
+    let URL = document.URL.split('/')[3];
+    
+    let ticking = false;
+    let lastKnownScrollPosition = 0;
 
-global $mysqli;
+    window.addEventListener('scroll', function() {
+        lastKnownScrollPosition = window.scrollY;
 
-if (isset($_POST['send_advertisement']) && $_FILES){
-    $imgRequest = new ImgRequest($_FILES['imgs']);
-    $advertisementRequest = new AdvertisementRequest($_POST);
-    updateAdvertisementSession(true, $advertisementRequest);
+        if (!ticking) {
+            window.requestAnimationFrame(async function() {
+                await checkingScrollPosition(lastKnownScrollPosition);
+                ticking = false;
+            });
 
-    if (checkFormData($advertisementRequest, $imgRequest)){
-        global $user;
+            ticking = true;
+        }
+    });
 
-        $advertisementRepository = new AdvertisementRepository($mysqli);
-        $advertisementService = new AdvertisementService($advertisementRepository);
+    async function checkingScrollPosition(lastKnownScrollPosition) {
+        let windowRelativeBottom = document.documentElement.getBoundingClientRect().bottom;
 
-        if ($advertisementService->createAdvertisement($advertisementRequest, $user)){
-            updateAdvertisementSession(false, $advertisementRequest);
+        if (windowRelativeBottom - lastKnownScrollPosition < 0){
+            return;
+        }
+        if (windowRelativeBottom - lastKnownScrollPosition < 500){
+            await paginator()
+        }
+    }
 
-            $advertisement = new Advertisement();
-            $advertisement = $advertisementService->getLastUserAdvertisement($user);
+    (async function () {
+        await paginator();
+    }());
 
-            if ($advertisement->addNewAdvertisementImg($imgRequest)){
-                header("Location: /");
-                return;
+    async function paginator() {
+        let formData = new FormData();
+        formData.append('page', page);
+        formData.append('type', URL);
+
+        let result = await fetch('/api/get_advertisement', {
+            method: 'POST',
+            body: formData
+        });
+
+        let resultText = await result.text();
+        if (resultText.length <= 2) {
+            let advertisementButton = document.querySelector('.advertisement_more_advertisements_block');
+            advertisementButton.parentNode.removeChild(advertisementButton);
+        }
+
+        let $selector = document.querySelector('.advertisement_block_main');
+        $selector.innerHTML += (resultText);
+        page++;
+
+        let about = document.querySelectorAll('.advertisement_content_about');
+        for (let i = 0; i < about.length; i++){
+            if (about[i].innerHTML.length >= 251){
+                about[i].innerHTML = about[i].innerHTML.substr(0, 250) + '...';
             }
         }
     }
-}
 
-function checkFormData(AdvertisementRequest $advertisementRequest, ImgRequest $imgRequest): bool
-{
-    global $err;
+    async function setAdvertisementVote(params) {
+        let param = params.split('.');
 
-    if (mb_strlen($advertisementRequest->title) <= 8){
-        $err = 'Заголовок слишком короткий!';
-        return false;
-    } else if (mb_strlen($advertisementRequest->address) <= 10){
-        $err = 'Адрес слишком короткий!';
-        return false;
-    } else if ($advertisementRequest->about === 'Введите описание недвижимости' || mb_strlen($advertisementRequest->about) <= 30){
-        $err = 'Описание слишком короткое!';
-        return false;
-    } else if (count($imgRequest->name) > 10) {
-        $err = 'Слишком много документов! Можно не более 10';
-        return false;
-    } else if ($imgRequest->name[0] !== ''){
-        foreach ($imgRequest->type as $type) {
-            if ($type !== 'image/jpeg' && $type !== 'image/webp' && $type !== 'jpg' && $type !== 'png'){
-                $err = 'Такой формат документов не поддерживается!';
-                return false;
-            }
-        }
-        foreach ($imgRequest->size as $size){
-            if ($size >= 2097152){
-                $err = 'Слишком большой документ';
-                return false;
-            }
-        }
+        let formData = new FormData();
+        formData.append('user_id', param[0]);
+        formData.append('advertisement_id', param[1]);
+        formData.append('positive_vote', param[2]);
+
+        let result = (await fetch('/api/set_vote', {
+            method: 'POST',
+            body: formData
+        })).text();
+
+        addNotification(await result);
     }
-    return true;
-}
-
-function updateAdvertisementSession (bool $bool, AdvertisementRequest $advertisementRequest){
-    if ($bool){
-        $_SESSION['title'] = $advertisementRequest->title;
-        $_SESSION['address'] = $advertisementRequest->address;
-        $_SESSION['about'] = $advertisementRequest->about;
-    } else {
-        $_SESSION['title'] = null;
-        $_SESSION['address'] = null;
-        $_SESSION['about'] = null;
-    }
-}
-?>
-<body>
-    <form method="post" class="advertisement_block_main" enctype="multipart/form-data">
-        <span>Добавить объявление</span>
-        <div class="advertisement_block">
-            <input required class="small_input" type="text" name="title" placeholder="Введите заголовок вашего объявления"
-                   value="<?=$_SESSION['title'] ?? null ?>">
-            <input required class="small_input" type="text" name="address" placeholder="Введите адрес недвижимости"
-                   value="<?=$_SESSION['address'] ?? null ?>">
-            <textarea class="small_input advertisement_textarea" type="text" name="about" onclick="textareaClear(this)"
-                ><?=$_SESSION['about'] ?? 'Введите описание недвижимости' ?></textarea>
-            <div>
-                <input required class="small_input" type="radio" name="type" value="sale" id="sale">
-                <label for="sale">Продажа</label>
-                <input required class="small_input" type="radio" name="type" value="rentals" id="rentals">
-                <label for="rentals">Аренда</label>
-            </div>
-            <div class="advertisement_img_block">
-                <input multiple style="display: none" type="file" id="advertisement_img" name="imgs[]">
-                <label class="small_input" for="advertisement_img">Добавить изображения</label>
-                <div class="small_input advertisement_img_btn" onclick="preview()">Показать изображения</div>
-            </div>
-            <div class="advertisement_img_preview" id="preview"></div>
-            <div class="advertisement_err"><?=$err ?? null ?></div>
-            <input class="small_input" name="send_advertisement" type="submit" value="Добавить объявление">
-        </div>
-    </form>
-</body>
+</script>

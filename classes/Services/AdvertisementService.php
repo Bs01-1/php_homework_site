@@ -9,6 +9,7 @@ use Classes\Collections\AdvertisementCollection;
 use Classes\Core\Paginator;
 use Classes\Repositories\AdvertisementRepositoryInterface;
 use Classes\Request\AdvertisementRequest;
+use Classes\Request\GetAdvertisementRequest;
 use Classes\User;
 
 class AdvertisementService
@@ -30,8 +31,11 @@ class AdvertisementService
         return $this->advertisementRepository->getLastUserAdvertisement($user);
     }
 
-    public function getAdvertisements(Paginator $paginator): AdvertisementCollection
+    public function getAdvertisements(
+        Paginator $paginator,
+        GetAdvertisementRequest $advertisementRequest
+    ): ?AdvertisementCollection
     {
-        return $this->advertisementRepository->getAdvertisementByLimitAndOffset($paginator->getCount(), $paginator->getOffset());
+        return $this->advertisementRepository->getAdvertisementByLimitAndOffset($paginator->getCount(), $paginator->getOffset(), $advertisementRequest);
     }
 }

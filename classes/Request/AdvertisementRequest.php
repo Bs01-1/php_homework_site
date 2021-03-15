@@ -10,4 +10,5 @@ class AdvertisementRequest extends HttpRequest
     public string $address;
     public string $about;
     public string $type;
+    public int $price;
 }
