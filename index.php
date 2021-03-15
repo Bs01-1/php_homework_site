@@ -30,7 +30,8 @@ use Classes\Services\UserService;
         ['url' => '/sale', 'path' => 'advertisement.php'],
         ['url' => '/rentals', 'path' => 'advertisement.php'],
         ['url' => '/api/get_advertisement', 'path' => 'api/get_advertisement.php', 'methods' => ['POST'], 'ajax' => true],
-        ['url' => '/api/add_notification', 'path' => 'api/add_notification.php', 'methods' => ['POST'], 'ajax' => true]
+        ['url' => '/api/set_vote', 'path' => 'api/set_vote.php',
+            'methods' => ['POST'], 'ajax' => true]
     ];
 
     $requestUrl = $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?? null;

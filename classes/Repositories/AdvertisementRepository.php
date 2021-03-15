@@ -39,7 +39,9 @@ class AdvertisementRepository extends Repository implements AdvertisementReposit
         GetAdvertisementRequest $advertisementRequest
     ): ?AdvertisementCollection
     {
-        $result = $this->connection->query("SELECT * FROM advertisement WHERE type = '{$advertisementRequest->type}' ORDER BY createdAt DESC LIMIT {$limit} OFFSET {$offset}");
+        $result = $this->connection->query("
+            SELECT * FROM advertisement WHERE type = '{$advertisementRequest->type}' ORDER BY createdAt DESC LIMIT {$limit} OFFSET {$offset}
+            ");
 
         $advertisementCollection = new AdvertisementCollection();
         if (!$result->num_rows){

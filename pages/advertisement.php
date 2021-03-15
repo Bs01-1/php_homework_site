@@ -66,4 +66,20 @@
             }
         }
     }
+
+    async function setAdvertisementVote(params) {
+        let param = params.split('.');
+
+        let formData = new FormData();
+        formData.append('user_id', param[0]);
+        formData.append('advertisement_id', param[1]);
+        formData.append('positive_vote', param[2]);
+
+        let result = (await fetch('/api/set_vote', {
+            method: 'POST',
+            body: formData
+        })).text();
+
+        addNotification(await result);
+    }
 </script>
