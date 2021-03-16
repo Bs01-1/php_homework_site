@@ -74,4 +74,12 @@ class AdvertisementRepository extends Repository implements AdvertisementReposit
 
         return Advertisement::createFromArray($advertisementArray);
     }
+
+    public function getCountAdvertisement(string $type): Int
+    {
+        $type = $this->connection->real_escape_string($type);
+        $result = $this->connection->query("SELECT COUNT(id) as count FROM advertisement WHERE type = '{$type}'");
+        $resultArray = $result->fetch_assoc();
+        return $resultArray['count'];
+    }
 }

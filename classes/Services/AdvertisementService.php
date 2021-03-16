@@ -46,4 +46,9 @@ class AdvertisementService
         }
         return null;
     }
+
+    public function getCountAdvertisement(string $type): Int
+    {
+        return $this->advertisementRepository->getCountAdvertisement($type);
+    }
 }

@@ -17,7 +17,7 @@ $advertisementService = new AdvertisementService($advertisementRepository);
 $advertisementRequest = new GetAdvertisementRequest($_POST);
 
 $ratingRepository = new RatingRepository($mysqli);
-$ratingService = new RatingService($ratingRepository);
+$ratingService = new RatingService($ratingRepository, $advertisementRepository);
 
 $paginator = new Paginator($advertisementRequest->page);
 $fileManager = new FileManager();

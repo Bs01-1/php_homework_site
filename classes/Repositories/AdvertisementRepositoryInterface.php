@@ -26,4 +26,6 @@ interface AdvertisementRepositoryInterface
     public function getAdvertisementById(int $id): ?Advertisement;
 
     public function addRatingByAdvertisementId(SetVote $setVote): bool;
+
+    public function getCountAdvertisement(string $type): Int;
 }

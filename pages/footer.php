@@ -17,7 +17,7 @@
         <div class="footer_btn_box_bottom"><a href="info#faq">FAQ</a></div>
         <div class="footer_btn_box_bottom"><a href="info#aboutUs">О нас</a></div>
         <div class="footer_btn_box_bottom"><a href="info#termsOfUse">Пользовательское соглашение</a></div>
-        <a href="./old_version/index.html"><div class="footer_btn_box_bottom">Старая версия сайта</div></a>
+        <a href="http://old-realty-ekb.киа.xyz"><div class="footer_btn_box_bottom">Старая версия сайта</div></a>
         <div class="footer_copyright">@copyright 2021</div>
     </div>
     <script src="/script.js"></script>

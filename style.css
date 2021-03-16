@@ -465,3 +465,18 @@ a {
     border-radius: 8px;
     border: 1px solid red;
 }
+
+.advertisement_info_block {
+    display: flex;
+    flex-direction: column;
+    width: 45%;
+    margin-bottom: 25px;
+}
+
+.advertisement_info_title {
+    font-size: 25px;
+    margin-bottom: 25px;
+}
+
+.advertisement_info_number { display: flex }
+.advertisement_info_number p { margin-right: 5px }

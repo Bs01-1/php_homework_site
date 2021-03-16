@@ -5,17 +5,20 @@ namespace Classes\Services;
 
 
 use Classes\Rating;
-use Classes\Repositories\AdvertisementRepository;
+use Classes\Repositories\AdvertisementRepositoryInterface;
 use Classes\Repositories\RatingRepositoryInterface;
 use Classes\Request\SetVote;
 
 class RatingService
 {
     protected RatingRepositoryInterface $ratingRepository;
+    protected AdvertisementRepositoryInterface $advertisementRepository;
 
-    public function __construct(RatingRepositoryInterface $ratingRepository)
+    public function __construct(
+        RatingRepositoryInterface $ratingRepository, AdvertisementRepositoryInterface $advertisementRepository)
     {
         $this->ratingRepository = $ratingRepository;
+        $this->advertisementRepository = $advertisementRepository;
     }
 
     public function ratingExist(SetVote $setVote): bool
@@ -26,9 +29,7 @@ class RatingService
     public function setVote(SetVote $setVote): bool
     {
         if ($this->ratingRepository->addRating($setVote)) {
-            global $mysqli;
-            $advertisementRepository = new AdvertisementRepository($mysqli);
-            return $advertisementRepository->addRatingByAdvertisementId($setVote);
+            return $this->advertisementRepository->addRatingByAdvertisementId($setVote);
         }
         return false;
     }

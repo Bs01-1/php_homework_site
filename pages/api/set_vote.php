@@ -8,8 +8,11 @@ use Classes\Services\RatingService;
 
 global $mysqli;
 
+$advertisementRepository = new AdvertisementRepository($mysqli);
+$advertisementService = new AdvertisementService($advertisementRepository);
+
 $ratingRepository = new RatingRepository($mysqli);
-$ratingService = new RatingService($ratingRepository);
+$ratingService = new RatingService($ratingRepository, $advertisementRepository);
 $ratingRequest = new SetVote($_POST);
 
 if (!$ratingService->ratingExist($ratingRequest)) {
@@ -23,10 +26,6 @@ if (!$ratingService->ratingExist($ratingRequest)) {
 }
 
 if ($answer !== 'Произашла ошибка!') :
-    global $mysqli;
-
-    $advertisementRepository = new AdvertisementRepository($mysqli);
-    $advertisementService = new AdvertisementService($advertisementRepository);
     echo $answer .
         'Рейтинг : ' . $advertisementService->getAdvertisementRatingById($ratingRequest->advertisement_id);
 ?>

@@ -1,5 +1,25 @@
-<div class="advertisement_block_main">
+<?php
+    use Classes\Repositories\AdvertisementRepository;
+use Classes\Services\AdvertisementService;
 
+global $mysqli;
+
+    $requestUrl = $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'];
+    $type = str_replace('/', '', $requestUrl);
+
+    $advertisementTitle = ($type === 'sale') ? 'Купить офис до 200 м2 в Екатеринбурге' :
+        'Аренда помещений в Екатеринбурге';
+
+    $advertisementRepository = new AdvertisementRepository($mysqli);
+    $advertisementService = new AdvertisementService($advertisementRepository);
+    $advertisementCount = $advertisementService->getCountAdvertisement($type);
+
+?>
+<div class="advertisement_block_main">
+    <div class="advertisement_info_block">
+        <div class="advertisement_info_title"><?=$advertisementTitle?></div>
+        <div class="advertisement_info_number"><p>Предложений : </p><?=$advertisementCount?></div>
+    </div>
 </div>
 <div class="advertisement_more_advertisements_block">
     <div class="advertisement_more_advertisements" onclick="paginator()">Добавить объявления!</div>
