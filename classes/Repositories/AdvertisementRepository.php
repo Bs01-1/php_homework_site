@@ -8,6 +8,7 @@ use Classes\Advertisement;
 use Classes\Collections\AdvertisementCollection;
 use Classes\Request\AdvertisementRequest;
 use Classes\Request\GetAdvertisementRequest;
+use Classes\Request\SetVote;
 use Classes\User;
 
 class AdvertisementRepository extends Repository implements AdvertisementRepositoryInterface
@@ -51,5 +52,26 @@ class AdvertisementRepository extends Repository implements AdvertisementReposit
             $advertisementCollection->addItem(Advertisement::createFromArray($advertisementArray));
         }
         return $advertisementCollection;
+    }
+
+    public function addRatingByAdvertisementId(SetVote $setVote): bool
+    {
+        $positiveVote = filter_var($setVote->positive_vote, FILTER_VALIDATE_BOOLEAN);
+        $intVote = $positiveVote ? 1 : -1;
+
+        return $this->connection->query("UPDATE advertisement SET rating = rating + {$intVote} 
+            WHERE id = {$setVote->advertisement_id}");
+    }
+
+    public function getAdvertisementById(int $id): ?Advertisement
+    {
+        $advertisement = $this->connection->query("SELECT * FROM advertisement WHERE id = {$id}");
+        if (!$advertisement || $advertisement->num_rows < 1){
+            return null;
+        }
+        $advertisementArray = $advertisement->fetch_assoc();
+        $advertisement->free_result();
+
+        return Advertisement::createFromArray($advertisementArray);
     }
 }

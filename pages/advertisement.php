@@ -80,6 +80,17 @@
             body: formData
         })).text();
 
-        addNotification(await result);
+        let resultArray =  (await result).split('.');
+        if (resultArray[2] !== undefined) {
+            let advertisementBlock = document.getElementById(param[1] + 'r_a');
+
+            let arrowBlock = advertisementBlock.querySelector('.advertisement_arrow');
+            arrowBlock.innerHTML = resultArray[2];
+
+            let ratingBlock = advertisementBlock.querySelector('.advertisement_rating');
+            ratingBlock.innerHTML = resultArray[1];
+        }
+
+        addNotification(resultArray[0]);
     }
 </script>

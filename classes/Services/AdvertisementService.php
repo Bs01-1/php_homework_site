@@ -38,4 +38,12 @@ class AdvertisementService
     {
         return $this->advertisementRepository->getAdvertisementByLimitAndOffset($paginator->getCount(), $paginator->getOffset(), $advertisementRequest);
     }
+
+    public function getAdvertisementRatingById(int $id): ?Int
+    {
+        if ($advertisement = $this->advertisementRepository->getAdvertisementById($id)){
+            return $advertisement->rating;
+        }
+        return null;
+    }
 }

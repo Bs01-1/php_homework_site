@@ -28,6 +28,9 @@ a {
     background-color: rgb(180, 180, 180);
 }
 
+.text_color_red { color: red }
+.text_color_green { color: green }
+
 .author {
     position: fixed;
     bottom: 10px;
@@ -408,9 +411,9 @@ a {
     cursor: pointer;
     font-size: 18px;
 }
-.advertisement_arrow p:hover:first-child { color: green }
-.advertisement_arrow p:hover:last-child { color: red }
-.advertisement_arrow p:first-child { margin-bottom: 6px}
+.advertisement_arrow .advertisement_arrow_vote:hover:first-child { color: green }
+.advertisement_arrow .advertisement_arrow_vote:hover:last-child { color: red }
+.advertisement_arrow .advertisement_arrow_vote:first-child { margin-bottom: 6px}
 
 .notifications_block_main {
     position: fixed;

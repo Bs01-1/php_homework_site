@@ -4,9 +4,8 @@
 namespace Classes\Repositories;
 
 
-use Classes\Advertisement;
+use Classes\Rating;
 use Classes\Request\SetVote;
-use Classes\User;
 
 class RatingRepository extends Repository implements RatingRepositoryInterface
 {
@@ -32,13 +31,18 @@ class RatingRepository extends Repository implements RatingRepositoryInterface
                 VALUES ({$setVote->user_id}, {$setVote->advertisement_id}, {$positiveVote})");
     }
 
-    public function getRatingByAdvertisementId(Advertisement $advertisement): int
+    public function getRating(SetVote $setVote): ?Rating
     {
-        $result = $this->connection->query("SELECT voteY - voteF as vote FROM
-            (SELECT COUNT(*) as voteY FROM rating WHERE advertisement_id = {$advertisement->id} AND 
-            positive_vote = 1)a,
-            (SELECT COUNT(*) as voteF FROM rating WHERE advertisement_id = {$advertisement->id} AND 
-            positive_vote = 0)b");
-        return $result->fetch_assoc()['vote'];
+        $rating = $this->connection->query("SELECT * FROM rating WHERE user_id = {$setVote->user_id} 
+            AND advertisement_id = {$setVote->advertisement_id}");
+
+        if (!$rating || $rating->num_rows < 1){
+            return null;
+        }
+        $ratingArray = $rating->fetch_assoc();
+        $ratingArray['positive_vote'] = $ratingArray['positive_vote'] ? true : false;
+        $rating->free_result();
+
+        return Rating::createFromArray($ratingArray);
     }
 }

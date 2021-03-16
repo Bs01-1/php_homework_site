@@ -4,8 +4,8 @@
 namespace Classes\Services;
 
 
-
-use Classes\Advertisement;
+use Classes\Rating;
+use Classes\Repositories\AdvertisementRepository;
 use Classes\Repositories\RatingRepositoryInterface;
 use Classes\Request\SetVote;
 
@@ -25,11 +25,16 @@ class RatingService
 
     public function setVote(SetVote $setVote): bool
     {
-        return $this->ratingRepository->addRating($setVote);
+        if ($this->ratingRepository->addRating($setVote)) {
+            global $mysqli;
+            $advertisementRepository = new AdvertisementRepository($mysqli);
+            return $advertisementRepository->addRatingByAdvertisementId($setVote);
+        }
+        return false;
     }
 
-    public function getVoteByAdvertisementId(Advertisement $advertisement): int
+    public function getPositiveVoteByUserIdAndAdvertisementId(SetVote $setVote): ?Rating
     {
-        return $this->ratingRepository->getRatingByAdvertisementId($advertisement);
+        return $this->ratingRepository->getRating($setVote);
     }
 }
