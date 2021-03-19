@@ -39,4 +39,9 @@ class UserService
     {
         return $this->userRepository->getuserByToken($token);
     }
+
+    public function getUserById(int $id): ?User
+    {
+        return $this->userRepository->getUserById($id);
+    }
 }

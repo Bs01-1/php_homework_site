@@ -39,6 +39,9 @@ foreach ($advertisements as $item):
         <div class="advertisement_rating">
             Рейтинг : <?=$advertisement->rating?>
         </div>
+        <?php if ($advertisement->relevance !== 'open') : ?>
+        <div class="status_advertisement">Закрыт</div>
+        <?php endif; ?>
         <?php
         if (isset($user)) :
             $ratingRequest = new SetVote([
@@ -79,7 +82,7 @@ foreach ($advertisements as $item):
             Описание : <?=$advertisement->about ?? null?>
         </div>
         <div class="advertisement_content_more">
-            <a href="">Подробнее</a>
+            <a href="id<?=$advertisement->id?>">Подробнее</a>
             <div class="advertisement_price">Цена: <?php if ($advertisement->price === 0){
                 echo 'По договору.';
                 } else echo $advertisement->price . 'Р';?>

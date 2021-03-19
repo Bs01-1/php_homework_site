@@ -62,4 +62,9 @@ class AdvertisementService
     {
         return $this->advertisementRepository->getAdvertisementsByLimitAndOrder($mainAdvertisementRequest);
     }
+
+    public function getAdvertisementById(int $id): ?Advertisement
+    {
+        return $this->advertisementRepository->getAdvertisementById($id);
+    }
 }

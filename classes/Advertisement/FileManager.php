@@ -5,9 +5,7 @@ namespace Classes\Advertisement;
 
 
 use Classes\Advertisement;
-use Classes\Collections\AdvertisementCollection;
 use Classes\Core\Config;
-use Classes\Img;
 use Classes\Request\ImgRequest;
 
 class FileManager
@@ -16,7 +14,8 @@ class FileManager
     {
         $isCorrectFormat = true;
         foreach ($imgRequest->type as $type) {
-            if ($type !== 'image/jpeg' && $type !== 'image/webp' && $type !== 'image/jpeg' && $type !== 'image/jpeg'){
+            if ($type !== 'image/jpeg' && $type !== 'image/webp' && $type !== 'image/jpeg' && $type !== 'image/jpeg'
+                && $type !== ''){
                 $isCorrectFormat = false;
             }
         }
@@ -27,7 +26,6 @@ class FileManager
     {
         $isCorrectSize = true;
         foreach ($imgRequest->size as $size){
-            var_dump($size);
             if ($size >= 2097152){
                 $isCorrectSize = false;
             }

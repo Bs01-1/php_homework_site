@@ -41,8 +41,8 @@ class AdvertisementRepository extends Repository implements AdvertisementReposit
         $desc = ($advertisementRequest->sortDesc === 1) ? 'DESC' : 'ASC';
 
         $result = $this->connection->query("
-            SELECT * FROM advertisement WHERE type = '{$advertisementRequest->type}' ORDER BY {$advertisementRequest->sortBy}
-            {$desc} LIMIT {$limit} OFFSET {$offset}
+            SELECT * FROM advertisement WHERE type = '{$advertisementRequest->type}' 
+            ORDER BY {$advertisementRequest->sortBy} {$desc} LIMIT {$limit} OFFSET {$offset}
             ");
 
         $advertisementCollection = new AdvertisementCollection();
@@ -97,7 +97,7 @@ class AdvertisementRepository extends Repository implements AdvertisementReposit
         $desc = ($mainAdvertisementRequest->desc) ? 'DESC' : 'ASC';
 
         $result = $this->connection->query("
-            SELECT * FROM advertisement ORDER BY {$mainAdvertisementRequest->orderBy}
+            SELECT * FROM advertisement WHERE relevance = 'open' ORDER BY {$mainAdvertisementRequest->orderBy}
             {$desc} LIMIT 5
             ");
 

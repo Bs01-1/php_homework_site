@@ -28,7 +28,6 @@ $advertisementSetting = [
         for ($i = 0; $i < count($advertisementSetting); $i++) :
             $advertisementRequest = new MainAdvertisementRequest($advertisementSetting[$i]);
             $advertisements = $advertisementService->getAdvertisementByLimitAndOrder($advertisementRequest);
-
      ?>
     <div class="content_block">
         <div class="content_title"><?=$advertisementRequest->name?></div>
@@ -39,7 +38,7 @@ $advertisementSetting = [
              */
             foreach ($advertisements as $item) :
     ?>
-            <a href="" class="content">
+            <a href="id<?=$item->id?>" class="content">
                 <div class="advertisement_rating main_rating">
                     Рейтинг : <?=$item->rating?>
                 </div>

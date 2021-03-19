@@ -23,14 +23,15 @@ use Classes\Services\UserService;
     $foundPage = null;
 
     $routes = [
+        ['url' => '/', 'path' => 'main.php'],
         ['url' => '/register', 'path' => 'register.php'],
         ['url' => '/add_advertisement', 'path' => 'addAdvertisement.php'],
-        ['url' => '/', 'path' => 'main.php'],
         ['url' => '/info', 'path' => 'info.php'],
         ['url' => '/sale', 'path' => 'advertisement.php'],
         ['url' => '/rentals', 'path' => 'advertisement.php'],
-        ['url' => '/api/get_advertisement', 'path' => 'api/get_advertisement.php', 'methods' => ['POST'], 'ajax' => true],
-        ['url' => '/api/set_vote', 'path' => 'api/set_vote.php',
+        ['url' => '/id(.+)', 'path' => 'id.php'],
+        ['url' => '/api\/get_advertisement', 'path' => 'api/get_advertisement.php', 'methods' => ['POST'], 'ajax' => true],
+        ['url' => '/api\/set_vote', 'path' => 'api/set_vote.php',
             'methods' => ['POST'], 'ajax' => true]
     ];
 
@@ -39,11 +40,9 @@ use Classes\Services\UserService;
         return;
     }
 
-//    var_dump($requestUrl);
-
     $isAjax = false;
     foreach ($routes as $route){
-        if ($route['url'] == $requestUrl){
+        if (preg_match($route['url'] . '/', $requestUrl)){
             $foundPage = $route['path'];
             if (!empty($route['methods']) && !in_array($_SERVER['REQUEST_METHOD'], $route['methods'])) {
                 $foundPage = null;
