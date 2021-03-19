@@ -10,6 +10,7 @@ use Classes\Core\Paginator;
 use Classes\Repositories\AdvertisementRepositoryInterface;
 use Classes\Request\AdvertisementRequest;
 use Classes\Request\GetAdvertisementRequest;
+use Classes\Request\MainAdvertisementRequest;
 use Classes\User;
 
 class AdvertisementService
@@ -36,7 +37,7 @@ class AdvertisementService
         GetAdvertisementRequest $advertisementRequest
     ): ?AdvertisementCollection
     {
-        return $this->advertisementRepository->getAdvertisementByLimitAndOffset($paginator->getCount(), $paginator->getOffset(), $advertisementRequest);
+        return $this->advertisementRepository->getAdvertisementsByLimitAndOffsetAndType($paginator->getCount(), $paginator->getOffset(), $advertisementRequest);
     }
 
     public function getAdvertisementRatingById(int $id): ?Int
@@ -47,8 +48,18 @@ class AdvertisementService
         return null;
     }
 
-    public function getCountAdvertisement(string $type): Int
+    public function getCountAdvertisementsByType(string $type): Int
     {
-        return $this->advertisementRepository->getCountAdvertisement($type);
+        return $this->advertisementRepository->getCountAdvertisementsByType($type);
+    }
+
+    public function getCountAdvertisements(): Int
+    {
+        return $this->advertisementRepository->getCountAdvertisements();
+    }
+
+    public function getAdvertisementByLimitAndOrder(MainAdvertisementRequest $mainAdvertisementRequest): ?AdvertisementCollection
+    {
+        return $this->advertisementRepository->getAdvertisementsByLimitAndOrder($mainAdvertisementRequest);
     }
 }

@@ -12,7 +12,7 @@ global $mysqli;
 
     $advertisementRepository = new AdvertisementRepository($mysqli);
     $advertisementService = new AdvertisementService($advertisementRepository);
-    $advertisementCount = $advertisementService->getCountAdvertisement($type);
+    $advertisementCount = $advertisementService->getCountAdvertisementsByType($type);
 
 ?>
 <div class="advertisement_block_main">
@@ -20,11 +20,25 @@ global $mysqli;
         <div class="advertisement_info_title"><?=$advertisementTitle?></div>
         <div class="advertisement_info_number"><p>Предложений : </p><?=$advertisementCount?></div>
     </div>
+    <div class="advertisement_sort_by">
+        Сортировать по :
+        <select id="sortBy" onchange="sortOption(this.value)">
+            <option value="1.createdAt">Сначала свежие</option>
+            <option value="0.createdAt">Сначала старые</option>
+            <option value="1.price">По убиванию цены</option>
+            <option value="0.price">По возрастанию цены</option>
+            <option value="1.rating">По рейтингу</option>
+        </select>
+    </div>
+    <div class="advertisements_block"></div>
 </div>
 <div class="advertisement_more_advertisements_block">
     <div class="advertisement_more_advertisements" onclick="paginator()">Добавить объявления!</div>
 </div>
 <script type="text/javascript">
+    let sortDesc = 1;
+    let sortBy = 'createdAt';
+
     let page = 0;
     let URL = document.URL.split('/')[3];
     
@@ -43,6 +57,18 @@ global $mysqli;
             ticking = true;
         }
     });
+
+    function sortOption (e) {
+        let sortArray = e.split('.');
+        sortDesc = Number(sortArray[0]);
+        sortBy = sortArray[1];
+
+        let $selector = document.querySelector('.advertisements_block');
+        $selector.innerHTML = '';
+        page = 0;
+
+        paginator();
+    }
 
     async function checkingScrollPosition(lastKnownScrollPosition) {
         let windowRelativeBottom = document.documentElement.getBoundingClientRect().bottom;
@@ -63,6 +89,8 @@ global $mysqli;
         let formData = new FormData();
         formData.append('page', page);
         formData.append('type', URL);
+        formData.append('sortBy', sortBy);
+        formData.append('sortDesc', sortDesc);
 
         let result = await fetch('/api/get_advertisement', {
             method: 'POST',
@@ -75,7 +103,7 @@ global $mysqli;
             advertisementButton.parentNode.removeChild(advertisementButton);
         }
 
-        let $selector = document.querySelector('.advertisement_block_main');
+        let $selector = document.querySelector('.advertisements_block');
         $selector.innerHTML += (resultText);
         page++;
 

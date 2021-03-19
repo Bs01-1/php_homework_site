@@ -8,6 +8,7 @@ use Classes\Advertisement;
 use Classes\Collections\AdvertisementCollection;
 use Classes\Request\AdvertisementRequest;
 use Classes\Request\GetAdvertisementRequest;
+use Classes\Request\MainAdvertisementRequest;
 use Classes\Request\SetVote;
 use Classes\User;
 
@@ -34,14 +35,14 @@ class AdvertisementRepository extends Repository implements AdvertisementReposit
         return Advertisement::createFromArray($resultArray);
     }
 
-    public function getAdvertisementByLimitAndOffset(
-        int $limit,
-        int $offset,
-        GetAdvertisementRequest $advertisementRequest
-    ): ?AdvertisementCollection
+    public function getAdvertisementsByLimitAndOffsetAndType(int $limit, int $offset,
+                                                             GetAdvertisementRequest $advertisementRequest): ?AdvertisementCollection
     {
+        $desc = ($advertisementRequest->sortDesc === 1) ? 'DESC' : 'ASC';
+
         $result = $this->connection->query("
-            SELECT * FROM advertisement WHERE type = '{$advertisementRequest->type}' ORDER BY createdAt DESC LIMIT {$limit} OFFSET {$offset}
+            SELECT * FROM advertisement WHERE type = '{$advertisementRequest->type}' ORDER BY {$advertisementRequest->sortBy}
+            {$desc} LIMIT {$limit} OFFSET {$offset}
             ");
 
         $advertisementCollection = new AdvertisementCollection();
@@ -75,11 +76,38 @@ class AdvertisementRepository extends Repository implements AdvertisementReposit
         return Advertisement::createFromArray($advertisementArray);
     }
 
-    public function getCountAdvertisement(string $type): Int
+    public function getCountAdvertisementsByType(string $type): Int
     {
         $type = $this->connection->real_escape_string($type);
         $result = $this->connection->query("SELECT COUNT(id) as count FROM advertisement WHERE type = '{$type}'");
         $resultArray = $result->fetch_assoc();
         return $resultArray['count'];
+    }
+
+    public function getCountAdvertisements(): Int
+    {
+        $result = $this->connection->query("SELECT COUNT(id) as count FROM advertisement");
+        $resultArray = $result->fetch_assoc();
+        $result->free_result();
+        return $resultArray['count'];
+    }
+
+    public function getAdvertisementsByLimitAndOrder(MainAdvertisementRequest $mainAdvertisementRequest): ?AdvertisementCollection
+    {
+        $desc = ($mainAdvertisementRequest->desc) ? 'DESC' : 'ASC';
+
+        $result = $this->connection->query("
+            SELECT * FROM advertisement ORDER BY {$mainAdvertisementRequest->orderBy}
+            {$desc} LIMIT 5
+            ");
+
+        $advertisementCollection = new AdvertisementCollection();
+        if (!$result->num_rows){
+            return null;
+        }
+        while ($advertisementArray = $result->fetch_assoc()) {
+            $advertisementCollection->addItem(Advertisement::createFromArray($advertisementArray));
+        }
+        return $advertisementCollection;
     }
 }

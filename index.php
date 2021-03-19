@@ -39,6 +39,8 @@ use Classes\Services\UserService;
         return;
     }
 
+//    var_dump($requestUrl);
+
     $isAjax = false;
     foreach ($routes as $route){
         if ($route['url'] == $requestUrl){
@@ -66,7 +68,10 @@ use Classes\Services\UserService;
     $f = fopen('title.txt', 'r+');
     $title = file_get_contents('title.txt');
     fclose($f);
-    $pos = mb_strripos($title, $foundPage);
+    if ($requestUrl === '/') {
+        $requestUrl = '/main';
+    }
+    $pos = mb_strripos($title, $requestUrl);
     $title = mb_substr($title, $pos);
     $pos = mb_strpos($title, '=');
     $title = mb_substr($title, $pos + 1);

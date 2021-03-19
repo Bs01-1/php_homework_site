@@ -8,6 +8,7 @@ use Classes\Advertisement;
 use Classes\Collections\AdvertisementCollection;
 use Classes\Request\AdvertisementRequest;
 use Classes\Request\GetAdvertisementRequest;
+use Classes\Request\MainAdvertisementRequest;
 use Classes\Request\SetVote;
 use Classes\User;
 
@@ -17,7 +18,7 @@ interface AdvertisementRepositoryInterface
 
     public function getLastUserAdvertisement(User $user);
 
-    public function getAdvertisementByLimitAndOffset(
+    public function getAdvertisementsByLimitAndOffsetAndType(
         int $limit,
         int $offset,
         GetAdvertisementRequest $advertisementRequest
@@ -27,5 +28,9 @@ interface AdvertisementRepositoryInterface
 
     public function addRatingByAdvertisementId(SetVote $setVote): bool;
 
-    public function getCountAdvertisement(string $type): Int;
+    public function getCountAdvertisementsByType(string $type): Int;
+
+    public function getCountAdvertisements(): Int;
+
+    public function getAdvertisementsByLimitAndOrder(MainAdvertisementRequest $mainAdvertisementRequest): ?AdvertisementCollection;
 }
