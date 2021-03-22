@@ -6,6 +6,7 @@ use Classes\Core\Paginator;
 use Classes\Repositories\AdvertisementRepository;
 use Classes\Repositories\RatingRepository;
 use Classes\Request\GetAdvertisementRequest;
+use Classes\Request\SetVote;
 use Classes\Services\AdvertisementService;
 use Classes\Services\RatingService;
 
@@ -16,7 +17,7 @@ $advertisementService = new AdvertisementService($advertisementRepository);
 $advertisementRequest = new GetAdvertisementRequest($_POST);
 
 $ratingRepository = new RatingRepository($mysqli);
-$ratingService = new RatingService($ratingRepository);
+$ratingService = new RatingService($ratingRepository, $advertisementRepository);
 
 $paginator = new Paginator($advertisementRequest->page);
 $fileManager = new FileManager();
@@ -31,18 +32,43 @@ if (!$advertisements){
  */
 foreach ($advertisements as $item):
     $advertisement = Advertisement::createFromObject($item);
+
 ?>
-<div class="advertisement_block" id="<?=$ratingService->getVoteByAdvertisementId($advertisement)?>">
+<div class="advertisement_block" id="<?=$advertisement->id?>r_a">
     <div class="advertisement_img_block">
         <div class="advertisement_rating">
-            рейтинг : <?=$ratingService->getVoteByAdvertisementId($advertisement)?>
+            Рейтинг : <?=$advertisement->rating?>
         </div>
-        <?php if (isset($user)) : ?>
-        <div class="advertisement_arrow">
-            <p onclick="setAdvertisementVote('<?=$user->id. '.' . $item->id . '.1'?>')">▲</p>
-            <p onclick="setAdvertisementVote('<?=$user->id. '.' . $item->id . '.0'?>')">▼</p>
-        </div>
+        <?php if ($advertisement->relevance !== 'open') : ?>
+        <div class="status_advertisement">Закрыт</div>
         <?php endif; ?>
+        <?php
+        if (isset($user)) :
+            $ratingRequest = new SetVote([
+                'advertisement_id' => $advertisement->id,
+                'user_id' => $user->id
+            ]);
+            $upArrow = '▲';
+            $downArrow = '▼';
+
+            if (!$ratingService->ratingExist($ratingRequest)) :
+        ?>
+        <div class="advertisement_arrow">
+            <p onclick="setAdvertisementVote('<?=$user->id. '.' . $item->id . '.1'?>')" id="arrow1"
+                class="advertisement_arrow_vote"><?=$upArrow?></p>
+            <p onclick="setAdvertisementVote('<?=$user->id. '.' . $item->id . '.0'?>')" id="arrow0"
+               class="advertisement_arrow_vote"><?=$downArrow?></p>
+        </div>
+        <?php else :
+            if ($positiveVote = $ratingService->getPositiveVoteByUserIdAndAdvertisementId($ratingRequest)) :
+        ?>
+        <div class="advertisement_arrow">
+            <p onclick="addNotification('Вы уже проголосовали!')"
+               class="<?=($positiveVote->positive_vote) ? 'text_color_green' : 'text_color_red'?>">
+                <?=($positiveVote->positive_vote) ? $upArrow : $downArrow?>
+            </p>
+        </div>
+        <?php endif; endif; endif; ?>
         <img src="<?=$fileManager->getFirstImgPathByAdvertisement($advertisement)?>" alt="123">
     </div>
     <div class="advertisement_content_block">
@@ -56,7 +82,7 @@ foreach ($advertisements as $item):
             Описание : <?=$advertisement->about ?? null?>
         </div>
         <div class="advertisement_content_more">
-            <a href="">Подробнее</a>
+            <a href="id<?=$advertisement->id?>">Подробнее</a>
             <div class="advertisement_price">Цена: <?php if ($advertisement->price === 0){
                 echo 'По договору.';
                 } else echo $advertisement->price . 'Р';?>

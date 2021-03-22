@@ -28,6 +28,9 @@ a {
     background-color: rgb(180, 180, 180);
 }
 
+.text_color_red { color: red }
+.text_color_green { color: green }
+
 .author {
     position: fixed;
     bottom: 10px;
@@ -408,9 +411,9 @@ a {
     cursor: pointer;
     font-size: 18px;
 }
-.advertisement_arrow p:hover:first-child { color: green }
-.advertisement_arrow p:hover:last-child { color: red }
-.advertisement_arrow p:first-child { margin-bottom: 6px}
+.advertisement_arrow .advertisement_arrow_vote:hover:first-child { color: green }
+.advertisement_arrow .advertisement_arrow_vote:hover:last-child { color: red }
+.advertisement_arrow .advertisement_arrow_vote:first-child { margin-bottom: 6px}
 
 .notifications_block_main {
     position: fixed;
@@ -461,4 +464,199 @@ a {
     padding: 10px;
     border-radius: 8px;
     border: 1px solid red;
+}
+
+.advertisement_info_block {
+    display: flex;
+    flex-direction: column;
+    width: 45%;
+    margin-bottom: 25px;
+}
+
+.advertisement_sort_by {
+    width: 45%;
+    margin-bottom: 25px;
+}
+
+.advertisement_info_title {
+    font-size: 25px;
+    margin-bottom: 25px;
+}
+
+.advertisement_info_number { display: flex }
+.advertisement_info_number p { margin-right: 5px }
+
+.advertisements_block {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.status_advertisement {
+    position: absolute;
+    color: white;
+    bottom: 5px;
+    left: 5px;
+    padding: 5px;
+    background: rgb(55, 0, 11);
+    border-radius: 8px;
+}
+
+.main_content_block {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin: 50px 0;
+}
+
+.main_content_info {
+    font-size: 20px;
+    width: 55%;
+    text-align: center;
+    border-bottom: 1px solid rgba(0,0,0,.25);
+    margin-bottom: 25px;
+}
+
+.content_title {
+    background: rgba(0,0,0,.05);
+    padding: 10px;
+}
+
+.content_block {
+    margin: 25px 0;
+    font-size: 18px;
+    width: 55%;
+    padding: 5px;
+}
+
+.content_box {
+    border: 1px solid rgba(0,0,0,.05);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+}
+
+.content_img {
+    border-bottom: 1px solid rgba(0,0,0,.05);
+    height: 205px;
+}
+
+.content_img img {
+    max-width: 100%;
+    max-height: 200px;
+}
+
+.content {
+    position: relative;
+    border-left: 1px solid rgba(0,0,0,.05);
+}
+.content:last-child {border-left: none}
+
+.main_rating { font-size: 14px }
+
+.advertisement_page_block_main {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 50px 0;
+}
+
+.advertisement_page_header {
+    display: flex;
+    flex-direction: row;
+    width: 45%;
+    border-top: 1px solid rgba(0,0,0,.25);
+    border-bottom: 1px solid rgba(0,0,0,.25);
+    padding: 10px 2px;
+}
+
+.advertisement_page_header_info {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.advertisement_title, .advertisement_address, .advertisement_phone {
+    font-size: 22px;
+    width: 100%;
+    padding: 0 10px 10px;
+    border-bottom: 1px solid rgba(0,0,0,.25);
+}
+
+.advertisement_address { font-size: 22px; padding-bottom: 6px}
+
+.advertisement_phone {
+    position: relative;
+    font-size: 20px;
+    padding-bottom: 2px
+}
+
+.advertisement_page_price {
+    position: absolute;
+    top: 1px;
+    right: 3px;
+}
+
+.advertisement_page_content {
+    margin-top: 20px;
+    width: 45%;
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    flex-direction: column;
+}
+
+.advertisement_page_content_title, .advertisement_page_footer_title {
+    width: 100%;
+    text-align: center;
+    border-top: 1px solid rgba(0,0,0,.25);
+    border-bottom: 1px solid rgba(0,0,0,.25);
+}
+
+.advertisement_page_footer_title {
+    padding: 8px 0;
+    margin-bottom: 10px;
+}
+
+.advertisement_page_content_about {
+    width: 100%;
+    font-size: 18px;
+    padding: 10px 2px;
+    border-bottom: 1px solid rgba(0,0,0,.25);
+}
+
+.advertisement_page_footer {
+    width: 45%;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+}
+
+.advertisement_img_arrow {
+    position: absolute;
+    background: rgba(0, 0, 0,.5);
+    padding: 5px;
+    border-radius: 9px;
+    top: 8px;
+    color: white;
+    font-size: 25px;
+    cursor: pointer;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.advertisement_img_arrow:active {
+    font-size: 28px;
+}
+
+.advertisement_img_arrow.left {
+    right: 50px;
+}
+.advertisement_img_arrow.right {
+    right: 8px;
 }

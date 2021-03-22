@@ -1,4 +1,7 @@
-register.php=Регистрация;
-advertisement.php=Добавить объявление;
-main.php=Главная;
-header.php=Тест;
+/register=Регистрация;
+/add_advertisement=Добавить объявление;
+/main=Главная;
+/header=Тест;
+/sale=Продажа;
+/rentals=Аренда;
+/info=Информация;

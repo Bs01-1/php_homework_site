@@ -4,7 +4,7 @@
 namespace Classes\Repositories;
 
 
-use Classes\Advertisement;
+use Classes\Rating;
 use Classes\Request\SetVote;
 
 interface RatingRepositoryInterface
@@ -13,5 +13,5 @@ interface RatingRepositoryInterface
 
     public function addRating(SetVote $setVote): bool;
 
-    public function getRatingByAdvertisementId(Advertisement $advertisement): int;
+    public function getRating(SetVote $setVote): ?Rating;
 }

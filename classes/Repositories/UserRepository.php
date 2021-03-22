@@ -42,7 +42,7 @@ class UserRepository extends Repository implements UserRepositoryInterface
     {
         $nickname = $this->connection->real_escape_string($nickname);
 
-        $result = $this->connection->query("SELECT * FROM users WHERE nickname = '{$nickname}' LIMIT 1");;
+        $result = $this->connection->query("SELECT * FROM users WHERE nickname = '{$nickname}' LIMIT 1");
         if (!$result || $result->num_rows < 1){
             return null;
         }
@@ -55,7 +55,18 @@ class UserRepository extends Repository implements UserRepositoryInterface
     {
         $token = $this->connection->real_escape_string($token);
 
-        $result = $this->connection->query("SELECT * FROM users WHERE token = '{$token}' LIMIT 1");;
+        $result = $this->connection->query("SELECT * FROM users WHERE token = '{$token}' LIMIT 1");
+        if (!$result || $result->num_rows < 1){
+            return null;
+        }
+        $resultArray = $result->fetch_assoc();
+        $result->free_result();
+        return User::createFromArray($resultArray);
+    }
+
+    public function getUserById(int $id): ?User
+    {
+        $result = $this->connection->query("SELECT * FROM users WHERE id = {$id}");
         if (!$result || $result->num_rows < 1){
             return null;
         }

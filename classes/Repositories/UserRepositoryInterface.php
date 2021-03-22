@@ -16,4 +16,6 @@ interface UserRepositoryInterface
     public function getUserByNickname(string $nickname): ?User;
 
     public function getuserByToken(string $token): ?User;
+
+    public function getUserById(int $id): ?User;
 }

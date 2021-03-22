@@ -8,6 +8,8 @@ use Classes\Advertisement;
 use Classes\Collections\AdvertisementCollection;
 use Classes\Request\AdvertisementRequest;
 use Classes\Request\GetAdvertisementRequest;
+use Classes\Request\MainAdvertisementRequest;
+use Classes\Request\SetVote;
 use Classes\User;
 
 class AdvertisementRepository extends Repository implements AdvertisementRepositoryInterface
@@ -33,14 +35,70 @@ class AdvertisementRepository extends Repository implements AdvertisementReposit
         return Advertisement::createFromArray($resultArray);
     }
 
-    public function getAdvertisementByLimitAndOffset(
-        int $limit,
-        int $offset,
-        GetAdvertisementRequest $advertisementRequest
-    ): ?AdvertisementCollection
+    public function getAdvertisementsByLimitAndOffsetAndType(int $limit, int $offset,
+                                                             GetAdvertisementRequest $advertisementRequest): ?AdvertisementCollection
     {
+        $desc = ($advertisementRequest->sortDesc === 1) ? 'DESC' : 'ASC';
+
         $result = $this->connection->query("
-            SELECT * FROM advertisement WHERE type = '{$advertisementRequest->type}' ORDER BY createdAt DESC LIMIT {$limit} OFFSET {$offset}
+            SELECT * FROM advertisement WHERE type = '{$advertisementRequest->type}' 
+            ORDER BY {$advertisementRequest->sortBy} {$desc} LIMIT {$limit} OFFSET {$offset}
+            ");
+
+        $advertisementCollection = new AdvertisementCollection();
+        if (!$result->num_rows){
+            return null;
+        }
+        while ($advertisementArray = $result->fetch_assoc()) {
+            $advertisementCollection->addItem(Advertisement::createFromArray($advertisementArray));
+        }
+        return $advertisementCollection;
+    }
+
+    public function addRatingByAdvertisementId(SetVote $setVote): bool
+    {
+        $positiveVote = filter_var($setVote->positive_vote, FILTER_VALIDATE_BOOLEAN);
+        $intVote = $positiveVote ? 1 : -1;
+
+        return $this->connection->query("UPDATE advertisement SET rating = rating + {$intVote} 
+            WHERE id = {$setVote->advertisement_id}");
+    }
+
+    public function getAdvertisementById(int $id): ?Advertisement
+    {
+        $advertisement = $this->connection->query("SELECT * FROM advertisement WHERE id = {$id}");
+        if (!$advertisement || $advertisement->num_rows < 1){
+            return null;
+        }
+        $advertisementArray = $advertisement->fetch_assoc();
+        $advertisement->free_result();
+
+        return Advertisement::createFromArray($advertisementArray);
+    }
+
+    public function getCountAdvertisementsByType(string $type): Int
+    {
+        $type = $this->connection->real_escape_string($type);
+        $result = $this->connection->query("SELECT COUNT(id) as count FROM advertisement WHERE type = '{$type}'");
+        $resultArray = $result->fetch_assoc();
+        return $resultArray['count'];
+    }
+
+    public function getCountAdvertisements(): Int
+    {
+        $result = $this->connection->query("SELECT COUNT(id) as count FROM advertisement");
+        $resultArray = $result->fetch_assoc();
+        $result->free_result();
+        return $resultArray['count'];
+    }
+
+    public function getAdvertisementsByLimitAndOrder(MainAdvertisementRequest $mainAdvertisementRequest): ?AdvertisementCollection
+    {
+        $desc = ($mainAdvertisementRequest->desc) ? 'DESC' : 'ASC';
+
+        $result = $this->connection->query("
+            SELECT * FROM advertisement WHERE relevance = 'open' ORDER BY {$mainAdvertisementRequest->orderBy}
+            {$desc} LIMIT 5
             ");
 
         $advertisementCollection = new AdvertisementCollection();
