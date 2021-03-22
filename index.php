@@ -30,8 +30,11 @@ use Classes\Services\UserService;
         ['url' => '/sale', 'path' => 'advertisement.php'],
         ['url' => '/rentals', 'path' => 'advertisement.php'],
         ['url' => '/id(.+)', 'path' => 'id.php'],
-        ['url' => '/api\/get_advertisement', 'path' => 'api/get_advertisement.php', 'methods' => ['POST'], 'ajax' => true],
+        ['url' => '/api\/get_advertisement', 'path' => 'api/get_advertisement.php',
+            'methods' => ['POST'], 'ajax' => true],
         ['url' => '/api\/set_vote', 'path' => 'api/set_vote.php',
+            'methods' => ['POST'], 'ajax' => true],
+        ['url' => '/api\/get_images', 'path' => 'api/get_images.php',
             'methods' => ['POST'], 'ajax' => true]
     ];
 

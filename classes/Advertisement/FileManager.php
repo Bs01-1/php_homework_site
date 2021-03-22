@@ -93,4 +93,42 @@ class FileManager
 
         return $existImgPath . '/' . $imgDir[2];
     }
+
+    public function getCountImagesByAdvertisementId(Advertisement $advertisement): ?int
+    {
+        $imgPath = Config::getInstance();
+        $defaultImgPath = $imgPath->getByKey('paths.img_advertisement');
+        $existImgPath = $defaultImgPath . '/' .
+            $advertisement->type . '/' . $advertisement->user_id . '/' . $advertisement->id;
+
+        if (!file_exists(rootPath . $existImgPath)){
+            return null;
+        }
+
+        $imgDir = scandir(rootPath . $existImgPath);
+        $imgCount = 0;
+        foreach ($imgDir as $item) {
+            if ($item !== '.' && $item !== '..') {
+                $imgCount += 1;
+            }
+        }
+        return $imgCount;
+    }
+
+    public function getImagesPathsByAdvertisementId(Advertisement $advertisement): ?array
+    {
+        $imgPath = Config::getInstance();
+        $defaultImgPath = $imgPath->getByKey('paths.img_advertisement');
+        $existImgPath = $defaultImgPath . '/' .
+            $advertisement->type . '/' . $advertisement->user_id . '/' . $advertisement->id;
+
+        $imgDir = scandir(rootPath . $existImgPath);
+        $imagesPathsArray = [];
+        foreach ($imgDir as $item) {
+            if ($item !== '.' && $item !== '..') {
+                array_push($imagesPathsArray, $item);
+            }
+        }
+        return $imagesPathsArray;
+    }
 }
