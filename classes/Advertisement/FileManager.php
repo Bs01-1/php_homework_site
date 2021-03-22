@@ -14,8 +14,7 @@ class FileManager
     {
         $isCorrectFormat = true;
         foreach ($imgRequest->type as $type) {
-            if ($type !== 'image/jpeg' && $type !== 'image/webp' && $type !== 'image/jpeg' && $type !== 'image/jpeg'
-                && $type !== ''){
+            if ($type !== 'image/jpeg' && $type !== 'image/webp' && $type !== 'image/png' && $type !== 'image/jpg'){
                 $isCorrectFormat = false;
             }
         }
@@ -26,6 +25,7 @@ class FileManager
     {
         $isCorrectSize = true;
         foreach ($imgRequest->size as $size){
+            var_dump($size);
             if ($size >= 2097152){
                 $isCorrectSize = false;
             }

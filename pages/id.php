@@ -146,22 +146,23 @@ $fileManager = new FileManager();
 
     async function imageUp() {
         if (imagesPathsArray.length === 0) await chanceImages();
-        console.log(imagesCount);
 
-        if (imagesCount === imagesPathsArray.length - 1) imagesCount = 0;
         imgBlock.innerHTML = '';
-        imgBlock.appendChild(imagesPathsArray[imagesCount]);
         imagesCount++;
+        if (imagesCount >= imagesPathsArray.length)
+            imagesCount = 0;
+        imgBlock.appendChild(imagesPathsArray[imagesCount]);
     }
 
     async function imageBack() {
         if (imagesPathsArray.length === 0) await chanceImages();
-        console.log(imagesCount);
 
-        if (imagesCount === 0) imagesCount = imagesPathsArray.length - 1;
         imgBlock.innerHTML = '';
+        imagesCount -= 1;
+        if (imagesCount < 0) {
+            imagesCount = imagesPathsArray.length - 1;
+        }
         imgBlock.appendChild(imagesPathsArray[imagesCount]);
-        imagesCount--;
     }
 
     async function setAdvertisementVote(params) {
