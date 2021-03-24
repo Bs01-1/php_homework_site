@@ -32,10 +32,15 @@ if (isset($_POST['send_login'])){
                 <a href="sale" class="header_path">Продажа</a>
             </div>
             <?php if($_SESSION['auth'] ?? null): ?>
-                <form class="header_auth_box" method="post">
+                <div class="header_auth_box">
                     <a href="/add_advertisement" class="header_path header_button">Добавить объявление</a>
-                    <input class="header_path header_button" type="submit" value="Выход" name="logout">
-                </form>
+                    <div class="header_path header_button" onclick="headerViewProfileBox()">...</div>
+                    <form method="post" class="header_profile_box">
+                        <a class="header_profile_box_text" href="profile<?=$user->id?>">Профиль</a>
+                        <label class="header_profile_box_text" for="logout">Выход</label>
+                        <input style="display: none" name="logout" id="logout" type="submit">
+                    </form>
+                </div>
             <?php else: ?>
                 <div class="header_auth_box">
                     <a href="/register" class="header_path header_button">Регистрация</a>

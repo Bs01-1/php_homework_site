@@ -18,7 +18,9 @@ $advertisementId = intval(str_replace('/', '', str_replace('id', '', $requestUrl
 
 $advertisementRepository = new AdvertisementRepository($mysqli);
 $advertisementService = new AdvertisementService($advertisementRepository);
-$advertisement = $advertisementService->getAdvertisementById($advertisementId);
+if (!$advertisement = $advertisementService->getAdvertisementById($advertisementId)) {
+    return require_once 'pages/404.php';
+}
 
 $ratingRepository = new RatingRepository($mysqli);
 $ratingService = new RatingService($ratingRepository, $advertisementRepository);

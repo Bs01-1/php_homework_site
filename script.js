@@ -63,6 +63,18 @@ function headerViewLogInBox() {
     }
 }
 
+let viewProfileBox = false;
+function headerViewProfileBox() {
+    let ProfileBox = document.querySelector('.header_profile_box');
+    if (!viewProfileBox){
+        ProfileBox.classList.add('header_profile_box_view');
+        viewProfileBox = true;
+    } else {
+        ProfileBox.classList.remove('header_profile_box_view');
+        viewProfileBox = false;
+    }
+}
+
 function checkPassword() {
     let password = document.getElementById('password');
     let password_repeat = document.getElementById('password_repeat');

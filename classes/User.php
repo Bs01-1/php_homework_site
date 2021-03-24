@@ -11,6 +11,7 @@ class User extends Model
     public string $city;
     public string $phone;
     public string $date;
-    public string $sex;
+    public string $gender;
     public string $token;
+    public string $createdAt;
 }
