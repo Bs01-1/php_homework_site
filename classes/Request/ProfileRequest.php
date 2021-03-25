@@ -11,4 +11,5 @@ class ProfileRequest extends HttpRequest
     public string $password;
     public string $newPassword;
     public string $newPasswordRepeat;
+    public int $id;
 }

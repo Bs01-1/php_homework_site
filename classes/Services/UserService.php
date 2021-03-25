@@ -5,6 +5,7 @@ namespace Classes\Services;
 
 use Classes\Repositories\UserRepositoryInterface;
 use Classes\Request\AuthRequest;
+use Classes\Request\ProfileRequest;
 use Classes\Request\RegisterRequest;
 use Classes\User;
 
@@ -45,9 +46,9 @@ class UserService
         return $this->userRepository->getUserById($id);
     }
 
-    public function correctPassword(User $user): ?bool
+    public function correctPassword(User $user, ProfileRequest $profileRequest): ?bool
     {
         $result = $this->userRepository->getuserByToken($user->token);
-        return (md5($user->password) === $result->password) ? true : false;
+        return (md5($profileRequest->password) === $result->password) ? true : false;
     }
 }

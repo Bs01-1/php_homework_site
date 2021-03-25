@@ -12,6 +12,7 @@ use Classes\Services\RatingService;
 use Classes\Services\UserService;
 
 global $mysqli;
+global $user;
 
 $requestUrl = $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'];
 $advertisementId = intval(str_replace('/', '', str_replace('id', '', $requestUrl)));
@@ -42,10 +43,10 @@ $fileManager = new FileManager();
                 Рейтинг : <?=$advertisement->rating?>
             </div>
             <?php if ($advertisement->relevance !== 'open') : ?>
-                <div class="status_advertisement">Закрыт</div>
+                <div class="status_advertisement"><?=($advertisement->relevance === 'close' ? 'Закрыт' : 'Ожидание')?></div>
             <?php endif; ?>
             <?php
-            if (isset($user)) :
+            if (isset($user) && $advertisement->relevance !== 'close') :
                 $ratingRequest = new SetVote([
                     'advertisement_id' => $advertisement->id,
                     'user_id' => $user->id
@@ -87,6 +88,18 @@ $fileManager = new FileManager();
         <div class="advertisement_page_content_title">Описание</div>
         <div class="advertisement_page_content_about"><?=$advertisement->about?></div>
     </div>
+    <?php if ($advertisement->user_id === $user->id) : ?>
+    <div class="advertisement_page_content_button_block">
+        <a href="" class="advertisement_page_content_button">Редактировать</a>
+        <?php if ($advertisement->relevance === 'open') : ?>
+        <div class="advertisement_page_content_button" onclick="closeAdvertisement()">Закрыть объявление</div>
+        <?php endif; ?>
+    </div>
+    <?php elseif (isset($user) && $advertisement->relevance !== 'close') : ?>
+    <div class="advertisement_page_content_button_block">
+        <div class="advertisement_page_content_button">Купить</div>
+    </div>
+    <?php endif; ?>
     <div class="advertisement_page_footer">
         <div class="advertisement_page_footer_title">
             Рекомендуем к просмотрю популярные объявления.
@@ -192,6 +205,21 @@ $fileManager = new FileManager();
         }
 
         addNotification(resultArray[0]);
+    }
+
+    async function closeAdvertisement() {
+        let formData = new FormData();
+        formData.append('user_id', '<?=$user->id?>');
+        formData.append('advertisement_id', '<?=$advertisement->id?>');
+
+        let result = await fetch('/api/close_advertisement', {
+            method: 'POST',
+            body: formData
+        });
+
+        console.log(123);
+
+        addNotification(await result.text());
     }
 </script>
 

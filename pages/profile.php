@@ -1,7 +1,13 @@
 <?php
 
+use Classes\Advertisement;
+use Classes\Advertisement\FileManager;
+use Classes\Repositories\AdvertisementRepository;
 use Classes\Repositories\UserRepository;
 use Classes\Request\ProfileRequest;
+use Classes\Request\SetVote;
+use Classes\Services\AdvertisementService;
+use Classes\Services\ProfileService;
 use Classes\Services\UserService;
 use Classes\User;
 
@@ -16,6 +22,11 @@ $userId = intval(str_replace('/', '', str_replace('profile', '', $requestUrl)));
 
 $userRepository = new UserRepository($mysqli);
 $userService = new UserService($userRepository);
+
+$advertisementRepository = new AdvertisementRepository($mysqli);
+$advertisementService = new AdvertisementService($advertisementRepository);
+
+$fileManager = new FileManager();
 
 if (!$profileUser = $userService->getUserById($userId)) {
     return require_once 'pages/404.php';
@@ -32,11 +43,25 @@ if (isset($_POST['profile_update'])) {
     } else if (mb_strlen($profileRequest->phone) <= 5 || mb_strlen($profileRequest->phone) >= 20) {
         $err = 'Кривой номер';
     } else if (mb_strlen($profileRequest->password) !== 0) {
-        if (!$userService->correctPassword($user)) {
+        if (!$userService->correctPassword($profileUser, $profileRequest)) {
             $err = 'Неправильный пароль!';
-        } else if (mb_strlen($profileRequest->newPassword) <= 8) {
-            $err = 'Такой пароль нельзя';
+        } else if (mb_strlen($profileRequest->newPassword) <= 8 || mb_strlen($profileRequest->newPassword) >= 255) {
+            $err = 'Такой пароль нельзя!';
+        } else if ($profileRequest->newPassword !== $profileRequest->newPasswordRepeat) {
+            $err = 'Пароли не совпадают!';
         }
+    }
+
+    if (!isset($err)) {
+        $profileService = new ProfileService($userRepository);
+        if ($profileUser->city !== $profileRequest->city || $profileUser->phone !== $profileRequest->phone) {
+            $profileService->UpdateProfileData($profileRequest);
+        }
+        if ($userService->correctPassword($profileUser, $profileRequest) &&
+            $profileRequest->newPassword === $profileRequest->newPasswordRepeat) {
+            $profileService->UpdatePassword($profileRequest);
+        }
+        header("Location: /profile{$profileUser->id}");
     }
 }
 ?>
@@ -53,9 +78,36 @@ if (isset($_POST['profile_update'])) {
         <div><p>Новый Пароль : </p><input class="profile_input" type="password" name="newPassword"></div>
         <div><p>Повторите новый пароль : </p><input class="profile_input" type="password" name="newPasswordRepeat"></div>
         <div class="profile_err"><?=$err ?? null ?></div>
+        <input type="hidden" name="id" value="<?=$profileUser->id?>">
         <input class="profile_input profile_submit" type="submit" name="profile_update" value="Сохранить">
     </form>
+    <div class="profile_advertisement_block">
+        <div class="profile_advertisement_title">Ваши объявления</div>
+        <div class="profile_advertisement_box">
+        <?php
+        /**
+         * @var $item Advertisement
+         */
+        foreach ($advertisementService->getAdvertisementsByUser($profileUser) as $item) :
+        ?>
+            <div class="profile_advertisement" title="<?=$item->title?>" onmouseover="selectBlock(this)" onmouseleave="leave(this)">
+                <img src="<?=$fileManager->getFirstImgPathByAdvertisement($item)?>" alt="">
+                <a class="profile_advertisement_more" id="more" href="id<?=$item->id?>">Подробнее</a>
+            </div>
+        <?php endforeach; ?>
+        </div>
+    </div>
 </div>
 <script type="text/javascript">
     document.title = (document.getElementById('profile')).innerHTML;
+
+    function selectBlock(e) {
+        let block = e.querySelector('#more');
+        block.style.display = 'block';
+    }
+
+    function leave(e) {
+        let block = e.querySelector('#more');
+        block.style.display = 'none';
+    }
 </script>

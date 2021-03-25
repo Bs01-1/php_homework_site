@@ -40,10 +40,10 @@ foreach ($advertisements as $item):
             Рейтинг : <?=$advertisement->rating?>
         </div>
         <?php if ($advertisement->relevance !== 'open') : ?>
-        <div class="status_advertisement">Закрыт</div>
+        <div class="status_advertisement"><?=($advertisement->relevance === 'close' ? 'Закрыт' : 'Ожидание')?></div>
         <?php endif; ?>
         <?php
-        if (isset($user)) :
+        if (isset($user) && $advertisement->relevance !== 'close') :
             $ratingRequest = new SetVote([
                 'advertisement_id' => $advertisement->id,
                 'user_id' => $user->id

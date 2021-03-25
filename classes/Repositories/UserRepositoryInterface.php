@@ -4,6 +4,7 @@
 namespace Classes\Repositories;
 
 
+use Classes\Request\ProfileRequest;
 use Classes\Request\RegisterRequest;
 use Classes\User;
 
@@ -18,4 +19,10 @@ interface UserRepositoryInterface
     public function getuserByToken(string $token): ?User;
 
     public function getUserById(int $id): ?User;
+
+    public function updateCity(ProfileRequest $profileRequest): bool;
+
+    public function updatePhone(ProfileRequest $profileRequest): bool;
+
+    public function updatePassword(ProfileRequest $profileRequest): bool;
 }

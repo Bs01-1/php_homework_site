@@ -37,6 +37,8 @@ use Classes\Services\UserService;
         ['url' => '/api\/set_vote', 'path' => 'api/set_vote.php',
             'methods' => ['POST'], 'ajax' => true],
         ['url' => '/api\/get_images', 'path' => 'api/get_images.php',
+            'methods' => ['POST'], 'ajax' => true],
+        ['url' => '/api\/close_advertisement', 'path' => 'api/close_advertisement.php',
             'methods' => ['POST'], 'ajax' => true]
     ];
 

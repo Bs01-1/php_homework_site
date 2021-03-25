@@ -9,6 +9,7 @@ use Classes\Collections\AdvertisementCollection;
 use Classes\Core\Paginator;
 use Classes\Repositories\AdvertisementRepositoryInterface;
 use Classes\Request\AdvertisementRequest;
+use Classes\Request\CloseAdvertisement;
 use Classes\Request\GetAdvertisementRequest;
 use Classes\Request\MainAdvertisementRequest;
 use Classes\User;
@@ -66,5 +67,15 @@ class AdvertisementService
     public function getAdvertisementById(int $id): ?Advertisement
     {
         return $this->advertisementRepository->getAdvertisementById($id);
+    }
+
+    public function getAdvertisementsByUser(User $user): ?AdvertisementCollection
+    {
+        return $this->advertisementRepository->getAdvertisementsByUser($user);
+    }
+
+    public function closeAdvertisementByUserId(CloseAdvertisement $closeAdvertisement): bool
+    {
+        return $this->advertisementRepository->updateRelevanceByUserId($closeAdvertisement);
     }
 }

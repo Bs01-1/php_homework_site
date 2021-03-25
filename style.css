@@ -741,3 +741,68 @@ a {
     color: red;
     font-size: 12px;
 }
+
+.profile_advertisement_block {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile_advertisement_box {
+    width: 45%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    background: rgb(255, 255, 250);
+}
+
+.profile_advertisement_title {
+    width: 45%;
+    text-align: center;
+    font-size: 18px;
+    padding: 10px 0;
+    border-top: 1px solid rgba(0,0,0,.25);
+    border-bottom: 1px solid rgba(0,0,0,.25);
+    margin-bottom: 10px;
+}
+
+.profile_advertisement {
+    position: relative;
+    margin: 2px;
+}
+
+.profile_advertisement img { max-width: 100% }
+
+.profile_advertisement_more {
+    cursor: pointer;
+    display: none;
+    text-align: center;
+    width: 100%;
+    position: absolute;
+    left: 0px;
+    top: 1px;
+    z-index: 1;
+    background: rgba(0,0,0,.35);
+    color: white;
+    font-size: 16px;
+}
+
+.advertisement_page_content_button_block {
+    width: 45%;
+    border-bottom: 1px solid rgba(0,0,0,.25);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.advertisement_page_content_button {
+    text-align: center;
+    padding: 4px;
+    cursor: pointer;
+    border: 1px solid red;
+    color: red;
+    border-radius: 8px;
+    margin: 5px 2px;
+}
+
+.advertisement_page_content_button:hover { background: rgba(255, 0, 0, 0.05)
+}
