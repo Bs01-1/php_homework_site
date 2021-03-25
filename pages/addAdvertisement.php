@@ -6,8 +6,17 @@ use Classes\Repositories\AdvertisementRepository;
 use Classes\Request\AdvertisementRequest;
 use Classes\Request\ImgRequest;
 use Classes\Services\AdvertisementService;
+use Classes\User;
 
 global $mysqli;
+/**
+ * @var $user User
+ */
+global $user;
+
+if (!isset($user)) {
+    return require_once 'pages/404.php';
+}
 
 if (isset($_POST['send_advertisement']) && $_FILES){
     $imgRequest = new ImgRequest($_FILES['imgs']);

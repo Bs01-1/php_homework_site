@@ -44,4 +44,10 @@ class UserService
     {
         return $this->userRepository->getUserById($id);
     }
+
+    public function correctPassword(User $user): ?bool
+    {
+        $result = $this->userRepository->getuserByToken($user->token);
+        return (md5($user->password) === $result->password) ? true : false;
+    }
 }

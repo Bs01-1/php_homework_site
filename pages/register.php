@@ -3,8 +3,17 @@
 use Classes\Repositories\UserRepository;
 use Classes\Request\RegisterRequest;
 use Classes\Services\UserService;
+use Classes\User;
 
 global $mysqli;
+/**
+ * @var $user User
+ */
+global $user;
+
+if (isset($user)) {
+    return require_once 'pages/404.php';
+}
 
 if (isset($_POST['send_reg'])) {
     $request = new RegisterRequest($_POST);

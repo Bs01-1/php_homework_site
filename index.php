@@ -1,6 +1,7 @@
 <?php
 
 use Classes\Core\Config;
+use Classes\Core\SiteTitle;
 use Classes\Repositories\UserRepository;
 use Classes\Services\UserService;
 
@@ -68,18 +69,7 @@ use Classes\Services\UserService;
         $user = $userService->getUserByToken($_SESSION['auth']);
     }
 
-    $f = fopen('title.txt', 'r+');
-    $title = file_get_contents('title.txt');
-    fclose($f);
-    if ($requestUrl === '/') {
-        $requestUrl = '/main';
-    }
-    $pos = mb_strripos($title, $requestUrl);
-    $title = mb_substr($title, $pos);
-    $pos = mb_strpos($title, '=');
-    $title = mb_substr($title, $pos + 1);
-    $pos = mb_strpos ($title, ';');
-    $title = mb_substr($title, 0, $pos);
+    $title = SiteTitle::getTitle($requestUrl);
 ?>
 <?php if (!$isAjax): ?>
 <head>

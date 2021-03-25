@@ -76,7 +76,7 @@ $fileManager = new FileManager();
             </div>
         </div>
         <div class="advertisement_page_header_info">
-            <div class="advertisement_title"><?=$advertisement->title?></div>
+            <div class="advertisement_title" id="title"><?=$advertisement->title?></div>
             <div class="advertisement_address">Адрес : <?=$advertisement->address?></div>
             <div class="advertisement_phone">Телефон : <?=$advertisementUser->phone?>
                 <div class="advertisement_page_price">Цена : <?=$advertisement->price?></div>
@@ -114,6 +114,8 @@ $fileManager = new FileManager();
     </div>
 </div>
 <script type="text/javascript">
+    document.title += ': ' + (document.getElementById('title')).innerHTML;
+
     let imagesPathsArray = [];
     let imagesCount = 0;
     let user_id = '';
