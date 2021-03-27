@@ -3,11 +3,13 @@
 use Classes\Advertisement;
 use Classes\Advertisement\FileManager;
 use Classes\Repositories\AdvertisementRepository;
+use Classes\Repositories\BuyRepository;
 use Classes\Repositories\RatingRepository;
 use Classes\Repositories\UserRepository;
 use Classes\Request\MainAdvertisementRequest;
 use Classes\Request\SetVote;
 use Classes\Services\AdvertisementService;
+use Classes\Services\BuyService;
 use Classes\Services\RatingService;
 use Classes\Services\UserService;
 
@@ -29,6 +31,9 @@ $ratingService = new RatingService($ratingRepository, $advertisementRepository);
 $userRepository = new UserRepository($mysqli);
 $userService = new UserService($userRepository);
 $advertisementUser = $userService->getUserById($advertisement->user_id);
+
+$buyRepository = new BuyRepository($mysqli);
+$buyService = new BuyService($buyRepository);
 
 $fileManager = new FileManager();
 ?>
@@ -79,25 +84,25 @@ $fileManager = new FileManager();
         <div class="advertisement_page_header_info">
             <div class="advertisement_title" id="title"><?=$advertisement->title?></div>
             <div class="advertisement_address">Адрес : <?=$advertisement->address?></div>
-            <div class="advertisement_phone">Телефон : <?=$advertisementUser->phone?>
-                <div class="advertisement_page_price">Цена : <?=$advertisement->price?></div>
-            </div>
+            <div class="advertisement_phone">Телефон : <?=$advertisementUser->phone?></div>
+            <div class="advertisement_page_price">Цена : <?=$advertisement->price?></div>
         </div>
     </div>
     <div class="advertisement_page_content">
         <div class="advertisement_page_content_title">Описание</div>
         <div class="advertisement_page_content_about"><?=$advertisement->about?></div>
     </div>
-    <?php if ($advertisement->user_id === $user->id) : ?>
+    <?php if (isset($user) && $advertisement->user_id === $user->id) : ?>
     <div class="advertisement_page_content_button_block">
         <a href="" class="advertisement_page_content_button">Редактировать</a>
         <?php if ($advertisement->relevance === 'open') : ?>
-        <div class="advertisement_page_content_button" onclick="closeAdvertisement()">Закрыть объявление</div>
+        <a href="<?='id'.$advertisementId?>" class="advertisement_page_content_button" onclick="closeAdvertisement()">Закрыть объявление</a>
         <?php endif; ?>
     </div>
-    <?php elseif (isset($user) && $advertisement->relevance !== 'close') : ?>
+    <?php elseif (isset($user) && $advertisement->relevance !== 'close'
+        && !$buyService->existBuyByAdvertisementIdAndUserId($advertisement->id, $user->id)) : ?>
     <div class="advertisement_page_content_button_block">
-        <div class="advertisement_page_content_button">Купить</div>
+        <a href="<?='id'.$advertisementId?>" class="advertisement_page_content_button" onclick="buyAdvertisement()">Купить</a>
     </div>
     <?php endif; ?>
     <div class="advertisement_page_footer">
@@ -209,7 +214,7 @@ $fileManager = new FileManager();
 
     async function closeAdvertisement() {
         let formData = new FormData();
-        formData.append('user_id', '<?=$user->id?>');
+        formData.append('user_id', '<?=$user->id ?? null?>');
         formData.append('advertisement_id', '<?=$advertisement->id?>');
 
         let result = await fetch('/api/close_advertisement', {
@@ -217,7 +222,18 @@ $fileManager = new FileManager();
             body: formData
         });
 
-        console.log(123);
+        addNotification(await result.text());
+    }
+    
+    async function buyAdvertisement() {
+        let formData = new FormData();
+        formData.append('user_id', '<?=$user->id?>');
+        formData.append('advertisement_id', '<?=$advertisement->id?>');
+
+        let result = await fetch('/api/buy_advertisement', {
+            method: 'POST',
+            body: formData
+        });
 
         addNotification(await result.text());
     }

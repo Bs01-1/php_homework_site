@@ -17,6 +17,8 @@ interface AdvertisementRepositoryInterface
 {
     public function createAdvertisement(AdvertisementRequest $advertisementRequest, User $user);
 
+    public function addRatingByAdvertisementId(SetVote $setVote): bool;
+
     public function getLastUserAdvertisement(User $user);
 
     public function getAdvertisementsByLimitAndOffsetAndType(
@@ -27,8 +29,6 @@ interface AdvertisementRepositoryInterface
 
     public function getAdvertisementById(int $id): ?Advertisement;
 
-    public function addRatingByAdvertisementId(SetVote $setVote): bool;
-
     public function getCountAdvertisementsByType(string $type): Int;
 
     public function getCountAdvertisements(): Int;
@@ -37,5 +37,7 @@ interface AdvertisementRepositoryInterface
 
     public function getAdvertisementsByUser(User $user): ?AdvertisementCollection;
 
-    public function updateRelevanceByUserId(CloseAdvertisement $closeAdvertisement): bool;
+    public function updateRelevanceById(CloseAdvertisement $closeAdvertisement, string $value): bool;
+
+    public function deleteAdvertisementByAdvertisementIdAndUserId(CloseAdvertisement $closeAdvertisement): bool ;
 }

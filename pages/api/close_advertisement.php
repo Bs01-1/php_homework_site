@@ -12,6 +12,6 @@ $advertisementRepository = new AdvertisementRepository($mysqli);
 $advertisementService = new AdvertisementService($advertisementRepository);
 
 $answer =  ($user->id === $advertisementRequest->user_id) ?
-    ($advertisementService->closeAdvertisementByUserId($advertisementRequest)) ? 'Объявление закрыто!' : 'Ошиюка!'
+    ($advertisementService->closeAdvertisementByUserId($advertisementRequest)) ? 'Объявление закрыто!' : 'Ошибка!'
         : 'Ошибка пользователя';
 echo $answer;

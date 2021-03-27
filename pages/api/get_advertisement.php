@@ -72,9 +72,9 @@ foreach ($advertisements as $item):
         <img src="<?=$fileManager->getFirstImgPathByAdvertisement($advertisement)?>" alt="123">
     </div>
     <div class="advertisement_content_block">
-        <div class="advertisement_content_title">
+        <a href="id<?=$advertisement->id?>" class="advertisement_content_title">
             <b title="<?=$advertisement->title?>"><?=$advertisement->title?></b>
-        </div>
+        </a>
         <div class="advertisement_content_address">
             Адрес : <?=$advertisement->address ?? null?>
         </div>

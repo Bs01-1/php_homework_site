@@ -5,7 +5,6 @@ use Classes\Advertisement\FileManager;
 use Classes\Repositories\AdvertisementRepository;
 use Classes\Repositories\UserRepository;
 use Classes\Request\ProfileRequest;
-use Classes\Request\SetVote;
 use Classes\Services\AdvertisementService;
 use Classes\Services\ProfileService;
 use Classes\Services\UserService;
@@ -62,6 +61,7 @@ if (isset($_POST['profile_update'])) {
             $profileService->UpdatePassword($profileRequest);
         }
         header("Location: /profile{$profileUser->id}");
+        return;
     }
 }
 ?>
@@ -83,18 +83,36 @@ if (isset($_POST['profile_update'])) {
     </form>
     <div class="profile_advertisement_block">
         <div class="profile_advertisement_title">Ваши объявления</div>
+        <?php
+        $advertisements = $advertisementService->getAdvertisementsByUser($profileUser);
+        if ($advertisements) : ?>
+        <div class="profile_advertisement_mini_title">Активные объявления</div>
         <div class="profile_advertisement_box">
         <?php
         /**
          * @var $item Advertisement
          */
-        foreach ($advertisementService->getAdvertisementsByUser($profileUser) as $item) :
+            foreach ($advertisements as $item) :
+                if ($item->relevance === 'open') :
         ?>
             <div class="profile_advertisement" title="<?=$item->title?>" onmouseover="selectBlock(this)" onmouseleave="leave(this)">
                 <img src="<?=$fileManager->getFirstImgPathByAdvertisement($item)?>" alt="">
                 <a class="profile_advertisement_more" id="more" href="id<?=$item->id?>">Подробнее</a>
             </div>
-        <?php endforeach; ?>
+        <?php endif; endforeach; ?>
+        </div>
+        <div class="profile_advertisement_mini_title">Закрытые объявления</div>
+        <div class="profile_advertisement_box">
+        <?php foreach ($advertisements as $item) :
+            if ($item->relevance === 'close') :
+                ?>
+                <div class="profile_advertisement" title="<?=$item->title?>" onmouseover="selectBlock(this)" onmouseleave="leave(this)">
+                    <img src="<?=$fileManager->getFirstImgPathByAdvertisement($item)?>" alt="">
+                    <a class="profile_advertisement_more" id="more" href="<?='profile'.$profileUser->id?>" onclick="deleteAdvertisement(<?=$item->id?>)">Удалить</a>
+                </div>
+        <?php endif; endforeach; else :?>
+            <div class="profile_advertisement_mini_title">У вас нет объявлений!</div>
+        <?php endif; ?>
         </div>
     </div>
 </div>
@@ -109,5 +127,18 @@ if (isset($_POST['profile_update'])) {
     function leave(e) {
         let block = e.querySelector('#more');
         block.style.display = 'none';
+    }
+
+    async function deleteAdvertisement(advertisement_id) {
+        let formData = new FormData();
+        formData.append('user_id', '<?=$profileUser->id?>');
+        formData.append('advertisement_id', advertisement_id);
+
+        let result = await fetch('/api/delete_advertisement', {
+            method: 'POST',
+            body: formData
+        });
+
+        addNotification(await result.text());
     }
 </script>

@@ -78,13 +78,15 @@ class UserRepository extends Repository implements UserRepositoryInterface
 
     public function updateCity(ProfileRequest $profileRequest): bool
     {
-        $result = $this->connection->query("UPDATE users SET city = '{$profileRequest->city}' WHERE id = {$profileRequest->id}");
+        $city = $this->connection->real_escape_string($profileRequest->city);
+        $result = $this->connection->query("UPDATE users SET city = '{$city}' WHERE id = {$profileRequest->id}");
         return (bool) $result;
     }
 
     public function updatePhone(ProfileRequest $profileRequest): bool
     {
-        $result = $this->connection->query("UPDATE users SET phone = '{$profileRequest->phone}' WHERE id = {$profileRequest->id}");
+        $phone = $this->connection->real_escape_string($profileRequest->phone);
+        $result = $this->connection->query("UPDATE users SET phone = '{$phone}' WHERE id = {$profileRequest->id}");
         return (bool) $result;
     }
 
