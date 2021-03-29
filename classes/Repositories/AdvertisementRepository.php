@@ -127,11 +127,11 @@ class AdvertisementRepository extends Repository implements AdvertisementReposit
         return $advertisementCollection;
     }
 
-    public function updateRelevanceById(CloseAdvertisement $closeAdvertisement, string $value): bool
+    public function updateRelevanceById(int $advertisementId, string $value): bool
     {
         $value = $this->connection->real_escape_string($value);
         $result = $this->connection->query("UPDATE advertisement SET relevance = '{$value}' 
-            WHERE id = {$closeAdvertisement->advertisement_id}");
+            WHERE id = {$advertisementId}");
         return (bool) $result;
     }
 

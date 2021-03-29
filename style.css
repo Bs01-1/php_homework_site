@@ -13,6 +13,25 @@ a {
     color: black;
 }
 
+.scroll_block {
+    display: none;
+    cursor: pointer;
+    position: fixed;
+    z-index: 1;
+    padding: 15px;
+    background: rgba(0,0,0,.35);
+    border-radius: 8px;
+    color: white;
+    top: 15px;
+    left: 15px;
+}
+
+.scroll_block:hover {
+    font-size: 18px;
+    top: 13px;
+    left: 13px;
+}
+
 .none {
     display: none;
 }
@@ -192,13 +211,17 @@ a {
 .footer_btn_box_bottom:hover {color: rgb(250, 250, 250);}
 .footer_btn_box_bottom a:hover {color: rgb(250, 250, 250);}
 
+.footer_contacts_hover {
+    position: relative;
+}
+
 .footer_contacts_hover:hover .footer_contacts_info_block { display: block }
 .footer_contacts_info_block:hover { display: block }
 
 .footer_contacts_info_block {
     display: none;
     position: absolute;
-    bottom: 24px;
+    bottom: 15px;
     color: black;
     padding-bottom: 25px;
 }
@@ -806,3 +829,51 @@ a {
     width: 45%;
     border-bottom: 1px solid rgba(0,0,0,.25);
 }
+
+.profile_advertisement_answer_block {
+    display: flex;
+    flex-direction: row;
+    background: rgb(255, 255, 250);
+    width: 45%;
+    margin: 2px 0;
+    border-bottom: 1px solid rgba(0,0,0,.25);
+    padding: 2px 0;
+}
+
+.profile_advertisement_answer_img {
+    width: 150px;
+    cursor: pointer;
+}
+
+.profile_advertisement_answer_img img {
+    width: 100%;
+}
+
+.profile_advertisement_answer_info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 0 5px;
+}
+
+.profile_advertisement_answer_button_block {
+    margin-left: auto;
+}
+
+.profile_advertisement_answer_title {
+    margin: 5px 0;
+    font-size: 18px;
+    border-bottom: 1px solid rgba(0,0,0,.25);
+}
+
+.profile_advertisement_answer_buttons {
+    cursor: pointer;
+    text-align: center;
+    padding: 5px;
+    margin: 5px 5px;
+    border-radius: 8px;
+}
+
+.profile_advertisement_answer_buttons:first-child {  border: 1px solid green; }
+.profile_advertisement_answer_buttons:last-child {  border: 1px solid red; }
+.profile_advertisement_answer_buttons:hover { background: rgba(0,0,0,.05) }

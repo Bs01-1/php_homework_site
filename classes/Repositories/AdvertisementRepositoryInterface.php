@@ -37,7 +37,7 @@ interface AdvertisementRepositoryInterface
 
     public function getAdvertisementsByUser(User $user): ?AdvertisementCollection;
 
-    public function updateRelevanceById(CloseAdvertisement $closeAdvertisement, string $value): bool;
+    public function updateRelevanceById(int $advertisementId, string $value): bool;
 
     public function deleteAdvertisementByAdvertisementIdAndUserId(CloseAdvertisement $closeAdvertisement): bool ;
 }

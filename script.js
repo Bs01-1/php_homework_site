@@ -1,12 +1,14 @@
-window.onload = () => {
-    backgroundColor();
-}
+let scrollBottom = document.getElementById('scroll_bottom');
+window.addEventListener('scroll', function() {
+    scrollBottom.style.display = (document.documentElement.getBoundingClientRect().top <= -300) ?
+        'block' : 'none';
+});
 
 let bg_check = 0;
 let bg_bool_check = true;
 let bg_color = 255;
 
-function backgroundColor() {
+(function backgroundColor() {
     setTimeout(function () {
         let max = 30;
         let bg = document.getElementById('header_background');
@@ -29,7 +31,7 @@ function backgroundColor() {
 
         backgroundColor();
     }, 150);
-}
+})();
 
 function preview (){
     let file = document.querySelector('#advertisement_img');

@@ -43,6 +43,10 @@ use Classes\Services\UserService;
         ['url' => '/api\/delete_advertisement', 'path' => 'api/delete_advertisement.php',
             'methods' => ['POST'], 'ajax' => true],
         ['url' => '/api\/buy_advertisement', 'path' => 'api/buy_advertisement.php',
+            'methods' => ['POST'], 'ajax' => true],
+        ['url' => '/api\/delete_buy', 'path' => 'api/delete_buy.php',
+            'methods' => ['POST'], 'ajax' => true],
+        ['url' => '/api\/sale_advertisement', 'path' => 'api/sale_advertisement.php',
             'methods' => ['POST'], 'ajax' => true]
     ];
 

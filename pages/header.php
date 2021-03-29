@@ -23,8 +23,9 @@ if (isset($_POST['send_login'])){
     $err = 'Неверный логин или пароль';
 }
 ?>
+<a id="scroll_bottom" class="scroll_block" href="#scroll_up">На вверх!</a>
 <div class="main-wrapper">
-    <div class="header_box">
+    <div class="header_box" id="scroll_up">
         <div class="header_paths">
             <div class="header_path_box">
                 <a href="/"><img title="На главную" class="header_logo" src="/img/header/icon.ico" alt=''></a>

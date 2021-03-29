@@ -33,7 +33,7 @@ $userService = new UserService($userRepository);
 $advertisementUser = $userService->getUserById($advertisement->user_id);
 
 $buyRepository = new BuyRepository($mysqli);
-$buyService = new BuyService($buyRepository);
+$buyService = new BuyService($buyRepository, $advertisementRepository);
 
 $fileManager = new FileManager();
 ?>
@@ -48,7 +48,7 @@ $fileManager = new FileManager();
                 Рейтинг : <?=$advertisement->rating?>
             </div>
             <?php if ($advertisement->relevance !== 'open') : ?>
-                <div class="status_advertisement"><?=($advertisement->relevance === 'close' ? 'Закрыт' : 'Ожидание')?></div>
+                <div class="status_advertisement"><?=($advertisement->relevance === 'close' ? 'Закрыт (Объявление продано)' : 'Ожидание')?></div>
             <?php endif; ?>
             <?php
             if (isset($user) && $advertisement->relevance !== 'close') :

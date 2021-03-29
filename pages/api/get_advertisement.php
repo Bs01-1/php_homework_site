@@ -39,8 +39,8 @@ foreach ($advertisements as $item):
         <div class="advertisement_rating">
             Рейтинг : <?=$advertisement->rating?>
         </div>
-        <?php if ($advertisement->relevance !== 'open') : ?>
-        <div class="status_advertisement"><?=($advertisement->relevance === 'close' ? 'Закрыт' : 'Ожидание')?></div>
+        <?php if ($advertisement->relevance === 'close') : ?>
+        <div class="status_advertisement"><?='Закрыт'?></div>
         <?php endif; ?>
         <?php
         if (isset($user) && $advertisement->relevance !== 'close') :
@@ -69,7 +69,9 @@ foreach ($advertisements as $item):
             </p>
         </div>
         <?php endif; endif; endif; ?>
-        <img src="<?=$fileManager->getFirstImgPathByAdvertisement($advertisement)?>" alt="123">
+        <a href="id<?=$advertisement->id?>">
+            <img src="<?=$fileManager->getFirstImgPathByAdvertisement($advertisement)?>" alt="123">
+        </a>
     </div>
     <div class="advertisement_content_block">
         <a href="id<?=$advertisement->id?>" class="advertisement_content_title">

@@ -28,5 +28,10 @@ abstract class Collection implements \IteratorAggregate
         return spl_object_hash($item);
     }
 
+    public function isEmpty (): bool
+    {
+        return empty($this->items);
+    }
+
     abstract protected function isValidItem (object $item): bool;
 }

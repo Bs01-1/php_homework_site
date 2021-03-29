@@ -2,10 +2,13 @@
 
 use Classes\Advertisement;
 use Classes\Advertisement\FileManager;
+use Classes\Buy;
 use Classes\Repositories\AdvertisementRepository;
+use Classes\Repositories\BuyRepository;
 use Classes\Repositories\UserRepository;
 use Classes\Request\ProfileRequest;
 use Classes\Services\AdvertisementService;
+use Classes\Services\BuyService;
 use Classes\Services\ProfileService;
 use Classes\Services\UserService;
 use Classes\User;
@@ -24,6 +27,9 @@ $userService = new UserService($userRepository);
 
 $advertisementRepository = new AdvertisementRepository($mysqli);
 $advertisementService = new AdvertisementService($advertisementRepository);
+
+$buyRepository = new BuyRepository($mysqli);
+$buyService = new BuyService($buyRepository, $advertisementRepository);
 
 $fileManager = new FileManager();
 
@@ -82,6 +88,71 @@ if (isset($_POST['profile_update'])) {
         <input class="profile_input profile_submit" type="submit" name="profile_update" value="Сохранить">
     </form>
     <div class="profile_advertisement_block">
+        <div class="profile_advertisement_title">Предложения</div>
+        <?php if ($buys = $buyService->getBuysByUserWhereSuccessFalse($user)) : ?>
+            <div class="profile_advertisement_mini_title">Ожидают вашего ответа</div>
+            <?php
+            /**
+             * @var $item Buy
+             */
+            foreach ($buys as $item) :
+                $advertisement = $advertisementService->getAdvertisementById($item->advertisement_id);
+                $buyer = $userService->getUserById($item->user_id);
+            ?>
+                <div class="profile_advertisement_answer_block" id="<?=$item->id?>">
+                    <a class="profile_advertisement_answer_img" title="Перейти к объявлению" href="id<?=$item->advertisement_id?>">
+                        <img src="<?=$fileManager->getFirstImgPathByAdvertisement($advertisement)?>" alt="">
+                    </a>
+                    <div class="profile_advertisement_answer_info">
+                        <div class="profile_advertisement_answer_title"><?=$advertisement->title?></div>
+                        <p>Покупатель : <?=$buyer->nickname?></p>
+                        <p>Телефон : <?=$buyer->phone?></p>
+                    </div>
+                    <div class="profile_advertisement_answer_button_block">
+                        <div class="profile_advertisement_answer_buttons"onclick="acceptBuy(<?=$item->id?>)">Принять</div>
+                        <div class="profile_advertisement_answer_buttons" onclick="deleteBuy(<?=$item->id?>)">Отклонить</div>
+                    </div>
+                </div>
+            <?php endforeach; endif; ?>
+        <?php if ($buys = $buyService->getBuysByUserAndSuccess($user, false)) : ?>
+        <div class="profile_advertisement_mini_title">Ожидаем ответ продовца</div>
+        <?php
+        /**
+         * @var $item Buy
+         */
+        foreach ($buys as $item) :
+            $advertisement = $advertisementService->getAdvertisementById($item->advertisement_id);
+            $advertisementUser = $userService->getUserById($advertisement->user_id);
+            ?>
+            <div class="profile_advertisement_answer_block" id="<?=$item->id?>">
+                <a class="profile_advertisement_answer_img" title="Перейти к объявлению" href="id<?=$item->advertisement_id?>">
+                    <img src="<?=$fileManager->getFirstImgPathByAdvertisement($advertisement)?>" alt="">
+                </a>
+                <div class="profile_advertisement_answer_info">
+                    <div class="profile_advertisement_answer_title"><?=$advertisement->title?></div>
+                    <p>Продавец: <?=$advertisementUser->nickname?></p>
+                    <p>Телефон: <?=$advertisementUser->phone?></p>
+                </div>
+            </div>
+        <?php endforeach; endif; ?>
+        <?php if ($buys = $buyService->getBuysByUserAndSuccess($user, true)) : ?>
+            <div class="profile_advertisement_mini_title">Купленные объявления</div>
+            <?php
+            /**
+             * @var $item Buy
+             */
+            foreach ($buys as $item) : ?>
+                <div class="profile_advertisement_answer_block" id="<?=$item->id?>">
+                    <a class="profile_advertisement_answer_img" title="Перейти к объявлению" href="id<?=$item->advertisement_id?>">
+                        <img src="<?=$fileManager->getFirstImgPathByAdvertisement($advertisement)?>" alt="">
+                    </a>
+                    <div class="profile_advertisement_answer_info">
+                        <div class="profile_advertisement_answer_title"><?=$advertisement->title?></div>
+                        <p>Продавец: <?=$advertisementUser->nickname?></p>
+                        <p>Телефон: <?=$advertisementUser->phone?></p>
+                    </div>
+                </div>
+        <?php endforeach; endif; ?>
         <div class="profile_advertisement_title">Ваши объявления</div>
         <?php
         $advertisements = $advertisementService->getAdvertisementsByUser($profileUser);
@@ -140,5 +211,33 @@ if (isset($_POST['profile_update'])) {
         });
 
         addNotification(await result.text());
+    }
+
+    async function deleteBuy(buy_id) {
+        let formData = new FormData();
+        formData.append('buy_id', buy_id);
+
+        let result = await fetch('/api/delete_buy', {
+            method: 'POST',
+            body: formData
+        });
+
+        addNotification(await result.text());
+        let block = document.getElementById(buy_id);
+        block.parentNode.removeChild(block);
+    }
+
+    async function acceptBuy(buy_id) {
+        let formData = new FormData();
+        formData.append('buy_id', buy_id);
+
+        let result = await fetch('/api/sale_advertisement', {
+            method: 'POST',
+            body: formData
+        });
+
+        addNotification(await result.text());
+        let block = document.getElementById(buy_id);
+        block.parentNode.removeChild(block);
     }
 </script>

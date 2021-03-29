@@ -9,12 +9,13 @@ use Classes\Services\BuyService;
 global $mysqli;
 global $user;
 
-$buyRequest = new CloseAdvertisement($_POST);
-$buyRepository = new BuyRepository($mysqli);
-$buyService = new BuyService($buyRepository);
-
 $advertisementRepository = new AdvertisementRepository($mysqli);
 $advertisementService = new AdvertisementService($advertisementRepository);
+
+$buyRequest = new CloseAdvertisement($_POST);
+$buyRepository = new BuyRepository($mysqli);
+$buyService = new BuyService($buyRepository, $advertisementRepository);
+
 $advertisement = $advertisementService->getAdvertisementById($buyRequest->advertisement_id);
 
 $answer =  ($user->id === $buyRequest->user_id && $advertisement->relevance !== 'close') ?

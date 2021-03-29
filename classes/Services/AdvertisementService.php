@@ -76,12 +76,17 @@ class AdvertisementService
 
     public function closeAdvertisementByUserId(CloseAdvertisement $closeAdvertisement): bool
     {
-        return $this->advertisementRepository->updateRelevanceById($closeAdvertisement, 'close');
+        return $this->advertisementRepository->updateRelevanceById($closeAdvertisement->advertisement_id, 'close');
     }
 
     public function updateAdvertisementRelevanceToWait(CloseAdvertisement $closeAdvertisement): bool
     {
-        return $this->advertisementRepository->updateRelevanceById($closeAdvertisement, 'wait');
+        return $this->advertisementRepository->updateRelevanceById($closeAdvertisement->advertisement_id, 'wait');
+    }
+
+    public function updateAdvertisementRelevanceToOpen(int $advertisementId): bool
+    {
+        return $this->advertisementRepository->updateRelevanceById($advertisementId, 'open');
     }
 
     public function deleteAdvertisementByUserId(CloseAdvertisement $closeAdvertisement): bool
