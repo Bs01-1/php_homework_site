@@ -1,6 +1,7 @@
 <?php
 
 use Classes\Core\Config;
+use Classes\Core\SiteTitle;
 use Classes\Repositories\UserRepository;
 use Classes\Services\UserService;
 
@@ -30,11 +31,22 @@ use Classes\Services\UserService;
         ['url' => '/sale', 'path' => 'advertisement.php'],
         ['url' => '/rentals', 'path' => 'advertisement.php'],
         ['url' => '/id(.+)', 'path' => 'id.php'],
+        ['url' => '/profile(.+)', 'path' => 'profile.php'],
         ['url' => '/api\/get_advertisement', 'path' => 'api/get_advertisement.php',
             'methods' => ['POST'], 'ajax' => true],
         ['url' => '/api\/set_vote', 'path' => 'api/set_vote.php',
             'methods' => ['POST'], 'ajax' => true],
         ['url' => '/api\/get_images', 'path' => 'api/get_images.php',
+            'methods' => ['POST'], 'ajax' => true],
+        ['url' => '/api\/close_advertisement', 'path' => 'api/close_advertisement.php',
+            'methods' => ['POST'], 'ajax' => true],
+        ['url' => '/api\/delete_advertisement', 'path' => 'api/delete_advertisement.php',
+            'methods' => ['POST'], 'ajax' => true],
+        ['url' => '/api\/buy_advertisement', 'path' => 'api/buy_advertisement.php',
+            'methods' => ['POST'], 'ajax' => true],
+        ['url' => '/api\/delete_buy', 'path' => 'api/delete_buy.php',
+            'methods' => ['POST'], 'ajax' => true],
+        ['url' => '/api\/sale_advertisement', 'path' => 'api/sale_advertisement.php',
             'methods' => ['POST'], 'ajax' => true]
     ];
 
@@ -67,18 +79,7 @@ use Classes\Services\UserService;
         $user = $userService->getUserByToken($_SESSION['auth']);
     }
 
-    $f = fopen('title.txt', 'r+');
-    $title = file_get_contents('title.txt');
-    fclose($f);
-    if ($requestUrl === '/') {
-        $requestUrl = '/main';
-    }
-    $pos = mb_strripos($title, $requestUrl);
-    $title = mb_substr($title, $pos);
-    $pos = mb_strpos($title, '=');
-    $title = mb_substr($title, $pos + 1);
-    $pos = mb_strpos ($title, ';');
-    $title = mb_substr($title, 0, $pos);
+    $title = SiteTitle::getTitle($requestUrl);
 ?>
 <?php if (!$isAjax): ?>
 <head>

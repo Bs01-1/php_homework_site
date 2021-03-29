@@ -39,11 +39,11 @@ foreach ($advertisements as $item):
         <div class="advertisement_rating">
             Рейтинг : <?=$advertisement->rating?>
         </div>
-        <?php if ($advertisement->relevance !== 'open') : ?>
-        <div class="status_advertisement">Закрыт</div>
+        <?php if ($advertisement->relevance === 'close') : ?>
+        <div class="status_advertisement"><?='Закрыт'?></div>
         <?php endif; ?>
         <?php
-        if (isset($user)) :
+        if (isset($user) && $advertisement->relevance !== 'close') :
             $ratingRequest = new SetVote([
                 'advertisement_id' => $advertisement->id,
                 'user_id' => $user->id
@@ -69,12 +69,14 @@ foreach ($advertisements as $item):
             </p>
         </div>
         <?php endif; endif; endif; ?>
-        <img src="<?=$fileManager->getFirstImgPathByAdvertisement($advertisement)?>" alt="123">
+        <a href="id<?=$advertisement->id?>">
+            <img src="<?=$fileManager->getFirstImgPathByAdvertisement($advertisement)?>" alt="123">
+        </a>
     </div>
     <div class="advertisement_content_block">
-        <div class="advertisement_content_title">
+        <a href="id<?=$advertisement->id?>" class="advertisement_content_title">
             <b title="<?=$advertisement->title?>"><?=$advertisement->title?></b>
-        </div>
+        </a>
         <div class="advertisement_content_address">
             Адрес : <?=$advertisement->address ?? null?>
         </div>

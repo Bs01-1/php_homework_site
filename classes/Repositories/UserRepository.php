@@ -4,6 +4,7 @@
 namespace Classes\Repositories;
 
 
+use Classes\Request\ProfileRequest;
 use Classes\Request\RegisterRequest;
 use Classes\User;
 
@@ -73,5 +74,26 @@ class UserRepository extends Repository implements UserRepositoryInterface
         $resultArray = $result->fetch_assoc();
         $result->free_result();
         return User::createFromArray($resultArray);
+    }
+
+    public function updateCity(ProfileRequest $profileRequest): bool
+    {
+        $city = $this->connection->real_escape_string($profileRequest->city);
+        $result = $this->connection->query("UPDATE users SET city = '{$city}' WHERE id = {$profileRequest->id}");
+        return (bool) $result;
+    }
+
+    public function updatePhone(ProfileRequest $profileRequest): bool
+    {
+        $phone = $this->connection->real_escape_string($profileRequest->phone);
+        $result = $this->connection->query("UPDATE users SET phone = '{$phone}' WHERE id = {$profileRequest->id}");
+        return (bool) $result;
+    }
+
+    public function updatePassword(ProfileRequest $profileRequest): bool
+    {
+        $password = md5($profileRequest->newPassword);
+        $result = $this->connection->query("UPDATE users SET password = '{$password}' WHERE id = {$profileRequest->id}");
+        return (bool) $result;
     }
 }

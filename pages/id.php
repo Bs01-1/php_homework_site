@@ -3,22 +3,27 @@
 use Classes\Advertisement;
 use Classes\Advertisement\FileManager;
 use Classes\Repositories\AdvertisementRepository;
+use Classes\Repositories\BuyRepository;
 use Classes\Repositories\RatingRepository;
 use Classes\Repositories\UserRepository;
 use Classes\Request\MainAdvertisementRequest;
 use Classes\Request\SetVote;
 use Classes\Services\AdvertisementService;
+use Classes\Services\BuyService;
 use Classes\Services\RatingService;
 use Classes\Services\UserService;
 
 global $mysqli;
+global $user;
 
 $requestUrl = $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'];
 $advertisementId = intval(str_replace('/', '', str_replace('id', '', $requestUrl)));
 
 $advertisementRepository = new AdvertisementRepository($mysqli);
 $advertisementService = new AdvertisementService($advertisementRepository);
-$advertisement = $advertisementService->getAdvertisementById($advertisementId);
+if (!$advertisement = $advertisementService->getAdvertisementById($advertisementId)) {
+    return require_once 'pages/404.php';
+}
 
 $ratingRepository = new RatingRepository($mysqli);
 $ratingService = new RatingService($ratingRepository, $advertisementRepository);
@@ -26,6 +31,9 @@ $ratingService = new RatingService($ratingRepository, $advertisementRepository);
 $userRepository = new UserRepository($mysqli);
 $userService = new UserService($userRepository);
 $advertisementUser = $userService->getUserById($advertisement->user_id);
+
+$buyRepository = new BuyRepository($mysqli);
+$buyService = new BuyService($buyRepository, $advertisementRepository);
 
 $fileManager = new FileManager();
 ?>
@@ -40,10 +48,10 @@ $fileManager = new FileManager();
                 Рейтинг : <?=$advertisement->rating?>
             </div>
             <?php if ($advertisement->relevance !== 'open') : ?>
-                <div class="status_advertisement">Закрыт</div>
+                <div class="status_advertisement"><?=($advertisement->relevance === 'close' ? 'Закрыт (Объявление продано)' : 'Ожидание')?></div>
             <?php endif; ?>
             <?php
-            if (isset($user)) :
+            if (isset($user) && $advertisement->relevance !== 'close') :
                 $ratingRequest = new SetVote([
                     'advertisement_id' => $advertisement->id,
                     'user_id' => $user->id
@@ -74,17 +82,29 @@ $fileManager = new FileManager();
             </div>
         </div>
         <div class="advertisement_page_header_info">
-            <div class="advertisement_title"><?=$advertisement->title?></div>
+            <div class="advertisement_title" id="title"><?=$advertisement->title?></div>
             <div class="advertisement_address">Адрес : <?=$advertisement->address?></div>
-            <div class="advertisement_phone">Телефон : <?=$advertisementUser->phone?>
-                <div class="advertisement_page_price">Цена : <?=$advertisement->price?></div>
-            </div>
+            <div class="advertisement_phone">Телефон : <?=$advertisementUser->phone?></div>
+            <div class="advertisement_page_price">Цена : <?=$advertisement->price?></div>
         </div>
     </div>
     <div class="advertisement_page_content">
         <div class="advertisement_page_content_title">Описание</div>
         <div class="advertisement_page_content_about"><?=$advertisement->about?></div>
     </div>
+    <?php if (isset($user) && $advertisement->user_id === $user->id) : ?>
+    <div class="advertisement_page_content_button_block">
+        <a href="" class="advertisement_page_content_button">Редактировать</a>
+        <?php if ($advertisement->relevance === 'open') : ?>
+        <a href="<?='id'.$advertisementId?>" class="advertisement_page_content_button" onclick="closeAdvertisement()">Закрыть объявление</a>
+        <?php endif; ?>
+    </div>
+    <?php elseif (isset($user) && $advertisement->relevance !== 'close'
+        && !$buyService->existBuyByAdvertisementIdAndUserId($advertisement->id, $user->id)) : ?>
+    <div class="advertisement_page_content_button_block">
+        <a href="<?='id'.$advertisementId?>" class="advertisement_page_content_button" onclick="buyAdvertisement()">Купить</a>
+    </div>
+    <?php endif; ?>
     <div class="advertisement_page_footer">
         <div class="advertisement_page_footer_title">
             Рекомендуем к просмотрю популярные объявления.
@@ -112,6 +132,8 @@ $fileManager = new FileManager();
     </div>
 </div>
 <script type="text/javascript">
+    document.title += ': ' + (document.getElementById('title')).innerHTML;
+
     let imagesPathsArray = [];
     let imagesCount = 0;
     let user_id = '';
@@ -188,6 +210,32 @@ $fileManager = new FileManager();
         }
 
         addNotification(resultArray[0]);
+    }
+
+    async function closeAdvertisement() {
+        let formData = new FormData();
+        formData.append('user_id', '<?=$user->id ?? null?>');
+        formData.append('advertisement_id', '<?=$advertisement->id?>');
+
+        let result = await fetch('/api/close_advertisement', {
+            method: 'POST',
+            body: formData
+        });
+
+        addNotification(await result.text());
+    }
+    
+    async function buyAdvertisement() {
+        let formData = new FormData();
+        formData.append('user_id', '<?=$user->id?>');
+        formData.append('advertisement_id', '<?=$advertisement->id?>');
+
+        let result = await fetch('/api/buy_advertisement', {
+            method: 'POST',
+            body: formData
+        });
+
+        addNotification(await result.text());
     }
 </script>
 

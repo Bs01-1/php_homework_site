@@ -1,12 +1,14 @@
-window.onload = () => {
-    backgroundColor();
-}
+let scrollBottom = document.getElementById('scroll_bottom');
+window.addEventListener('scroll', function() {
+    scrollBottom.style.display = (document.documentElement.getBoundingClientRect().top <= -300) ?
+        'block' : 'none';
+});
 
 let bg_check = 0;
 let bg_bool_check = true;
 let bg_color = 255;
 
-function backgroundColor() {
+(function backgroundColor() {
     setTimeout(function () {
         let max = 30;
         let bg = document.getElementById('header_background');
@@ -29,7 +31,7 @@ function backgroundColor() {
 
         backgroundColor();
     }, 150);
-}
+})();
 
 function preview (){
     let file = document.querySelector('#advertisement_img');
@@ -60,6 +62,18 @@ function headerViewLogInBox() {
     } else {
         logInBox.classList.remove('header_login_box_view');
         viewLogInBox = false;
+    }
+}
+
+let viewProfileBox = false;
+function headerViewProfileBox() {
+    let ProfileBox = document.querySelector('.header_profile_box');
+    if (!viewProfileBox){
+        ProfileBox.classList.add('header_profile_box_view');
+        viewProfileBox = true;
+    } else {
+        ProfileBox.classList.remove('header_profile_box_view');
+        viewProfileBox = false;
     }
 }
 

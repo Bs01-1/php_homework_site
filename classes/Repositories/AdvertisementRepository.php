@@ -7,6 +7,7 @@ namespace Classes\Repositories;
 use Classes\Advertisement;
 use Classes\Collections\AdvertisementCollection;
 use Classes\Request\AdvertisementRequest;
+use Classes\Request\CloseAdvertisement;
 use Classes\Request\GetAdvertisementRequest;
 use Classes\Request\MainAdvertisementRequest;
 use Classes\Request\SetVote;
@@ -109,5 +110,35 @@ class AdvertisementRepository extends Repository implements AdvertisementReposit
             $advertisementCollection->addItem(Advertisement::createFromArray($advertisementArray));
         }
         return $advertisementCollection;
+    }
+
+    public function getAdvertisementsByUser(User $user): ?AdvertisementCollection
+    {
+        $result = $this->connection->query("
+            SELECT * FROM advertisement WHERE user_id = {$user->id} ORDER BY createdAt");
+
+        $advertisementCollection = new AdvertisementCollection();
+        if (!$result->num_rows){
+            return null;
+        }
+        while ($advertisementArray = $result->fetch_assoc()) {
+            $advertisementCollection->addItem(Advertisement::createFromArray($advertisementArray));
+        }
+        return $advertisementCollection;
+    }
+
+    public function updateRelevanceById(int $advertisementId, string $value): bool
+    {
+        $value = $this->connection->real_escape_string($value);
+        $result = $this->connection->query("UPDATE advertisement SET relevance = '{$value}' 
+            WHERE id = {$advertisementId}");
+        return (bool) $result;
+    }
+
+    public function deleteAdvertisementByAdvertisementIdAndUserId(CloseAdvertisement $closeAdvertisement): bool
+    {
+        $result = $this->connection->query("DELETE FROM advertisement WHERE id = {$closeAdvertisement->advertisement_id}
+            AND user_id = {$closeAdvertisement->user_id}");
+        return (bool) $result;
     }
 }
