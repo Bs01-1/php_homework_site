@@ -8,6 +8,7 @@ use Classes\Advertisement;
 use Classes\Collections\AdvertisementCollection;
 use Classes\Request\AdvertisementRequest;
 use Classes\Request\CloseAdvertisement;
+use Classes\Request\EditAdvertisement;
 use Classes\Request\GetAdvertisementRequest;
 use Classes\Request\MainAdvertisementRequest;
 use Classes\Request\SetVote;
@@ -140,5 +141,15 @@ class AdvertisementRepository extends Repository implements AdvertisementReposit
         $result = $this->connection->query("DELETE FROM advertisement WHERE id = {$closeAdvertisement->advertisement_id}
             AND user_id = {$closeAdvertisement->user_id}");
         return (bool) $result;
+    }
+
+    public function updatePublicAdvertisementInfo(EditAdvertisement $advertisement): bool
+    {
+        $title = $this->connection->real_escape_string($advertisement->title);
+        $address = $this->connection->real_escape_string($advertisement->address);
+        $about = $this->connection->real_escape_string($advertisement->about);
+
+        return (bool) $this->connection->query("UPDATE advertisement SET title = '{$title}', address = '{$address}',
+            about = '{$about}', price = {$advertisement->price} WHERE id = {$advertisement->advertisement_id}");
     }
 }

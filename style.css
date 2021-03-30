@@ -572,12 +572,12 @@ a {
 .content_box {
     border: 1px solid rgba(0,0,0,.05);
     display: grid;
+    grid-gap: 2px;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 }
 
 .content_img {
     border-bottom: 1px solid rgba(0,0,0,.05);
-    height: 205px;
 }
 
 .content_img img {
@@ -588,6 +588,8 @@ a {
 .content {
     position: relative;
     border-left: 1px solid rgba(0,0,0,.05);
+    display: grid;
+    grid-template-rows: 1fr;
 }
 .content:last-child {border-left: none}
 
@@ -718,7 +720,7 @@ a {
     margin-right: 10px;
 }
 
-.profile_input {
+.profile_input, .edit_input, .edit_submit {
     width: 100%;
     border: none;
     border-bottom: 1px solid rgba(0,0,0,.25);
@@ -726,12 +728,16 @@ a {
     margin: 8px 0;
 }
 
-.profile_input:focus {
+.profile_input:focus, .edit_input:focus {
     border: none;
     border-bottom: 1px solid rgba(0,0,0,.35);
     outline:none;
 }
-.profile_input:hover { border-bottom: 1px solid rgba(0,0,0,.35); }
+.profile_input:hover, .edit_input:hover { border-bottom: 1px solid rgba(0,0,0,.35); }
+
+.edit_input {
+    width: 100%;
+}
 
 .profile_submit {
     background: none;
@@ -877,3 +883,104 @@ a {
 .profile_advertisement_answer_buttons:first-child {  border: 1px solid green; }
 .profile_advertisement_answer_buttons:last-child {  border: 1px solid red; }
 .profile_advertisement_answer_buttons:hover { background: rgba(0,0,0,.05) }
+
+.edit_id_main_block {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 50px 0;
+    align-items: center;
+}
+
+.edit_id_title {
+    width: 45%;
+    border-top: 1px solid rgba(0,0,0,.25);
+    border-bottom: 1px solid rgba(0,0,0,.25);
+    font-size: 22px;
+    padding: 5px;
+    margin: 10px 0;
+}
+
+.edit_id_img_block {
+    position: relative;
+    width: 45%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-gap: 2px;
+}
+
+.edit_id_img {
+    position: relative;
+}
+
+.edit_id_delete_img {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    color: white;
+    font-size: 20px;
+    padding: 2px 5px;
+    background: rgba(0,0,0,.25);
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.edit_id_delete_img:hover { color: red;}
+
+.edit_id_img img {
+    width: 100%;
+}
+
+.edit_id_add_img_block {
+    margin-top: 10px;
+    width: 45%;
+}
+
+.edit_id_add_img_input, .edit_submit{
+    padding: 6px;
+    border: 1px solid black;
+}
+.edit_id_add_img_input:hover {background: rgba(0,0,0,.05)}
+
+.edit_submit:hover {
+    background: rgba(0,0,0,.05);
+    cursor: pointer;
+}
+
+.edit_id_back {
+    position: absolute;
+    left: -85px;
+    top: -2px;
+    text-align: end;
+}
+
+.edit_id_back a {
+    padding: 5px;
+    border: 1px solid black;
+    border-radius: 3px;
+}
+
+.edit_id_back a:hover{ background: rgba(0,0,0,.05); }
+
+.edit_id_form_block {
+    width: 45%;
+}
+
+.edit_id_left_bottom {
+    display: flex;
+    position: relative
+}
+.edit_id_left_bottom a {
+    position: fixed;
+}
+
+.edit_textarea {
+    resize: none;
+    width: 100%;
+    height: 150px;
+    border: 1px solid rgba(0,0,0,.25);
+    font-size: 16px;
+    padding: 5px;
+    margin-bottom: 5px;
+}

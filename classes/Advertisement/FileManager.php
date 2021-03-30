@@ -25,7 +25,6 @@ class FileManager
     {
         $isCorrectSize = true;
         foreach ($imgRequest->size as $size){
-            var_dump($size);
             if ($size >= 2097152){
                 $isCorrectSize = false;
             }
@@ -122,6 +121,10 @@ class FileManager
         $existImgPath = $defaultImgPath . '/' .
             $advertisement->type . '/' . $advertisement->user_id . '/' . $advertisement->id;
 
+        if (!file_exists(rootPath . $existImgPath)) {
+            return null;
+        }
+
         $imgDir = scandir(rootPath . $existImgPath);
         $imagesPathsArray = [];
         foreach ($imgDir as $item) {
@@ -130,5 +133,32 @@ class FileManager
             }
         }
         return $imagesPathsArray;
+    }
+
+    public function deleteImg(Advertisement $advertisement, string $imgName): bool
+    {
+        $imgPath = Config::getInstance();
+        $defaultImgPath = $imgPath->getByKey('paths.img_advertisement');
+        $existImgPath = $defaultImgPath . '/' .
+            $advertisement->type . '/' . $advertisement->user_id . '/' . $advertisement->id;
+
+        if (!file_exists(rootPath . $existImgPath . '/' . $imgName)) {
+            return false;
+        }
+        $result =  unlink(rootPath . $existImgPath . '/' . $imgName);
+        if (empty($this->getCountImagesByAdvertisementId($advertisement))) {
+            rmdir(rootPath . $existImgPath);
+        }
+        return $result;
+    }
+
+    public function deleteImages(Advertisement $advertisement, array $images): bool
+    {
+        foreach ($images as $image) {
+            if (!$this->deleteImg($advertisement, $image)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
