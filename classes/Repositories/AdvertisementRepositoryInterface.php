@@ -8,6 +8,7 @@ use Classes\Advertisement;
 use Classes\Collections\AdvertisementCollection;
 use Classes\Request\AdvertisementRequest;
 use Classes\Request\CloseAdvertisement;
+use Classes\Request\EditAdvertisement;
 use Classes\Request\GetAdvertisementRequest;
 use Classes\Request\MainAdvertisementRequest;
 use Classes\Request\SetVote;
@@ -38,6 +39,8 @@ interface AdvertisementRepositoryInterface
     public function getAdvertisementsByUser(User $user): ?AdvertisementCollection;
 
     public function updateRelevanceById(int $advertisementId, string $value): bool;
+
+    public function updatePublicAdvertisementInfo (EditAdvertisement $advertisement): bool;
 
     public function deleteAdvertisementByAdvertisementIdAndUserId(CloseAdvertisement $closeAdvertisement): bool ;
 }

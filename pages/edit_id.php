@@ -2,6 +2,7 @@
 
 use Classes\Advertisement\FileManager;
 use Classes\Repositories\AdvertisementRepository;
+use Classes\Request\EditAdvertisement;
 use Classes\Request\ImgRequest;
 use Classes\Services\AdvertisementService;
 
@@ -37,10 +38,52 @@ if (isset($_POST['add_img'])) {
         header("Location: /edit_id{$advertisement->id}");
     }
 }
+
+if (isset($_POST['edit_advertisement'])) {
+    $advertisementRequest = new EditAdvertisement($_POST);
+    updateAdvertisementSession(true, $advertisementRequest);
+
+    if (mb_strlen($advertisementRequest->title) <= 8){
+        $err = 'Заголовок слишком короткий!';
+    } else if (mb_strlen($advertisementRequest->address) <= 10){
+        $err = 'Адрес слишком короткий!';
+    } else if ($advertisementRequest->about === 'Введите описание недвижимости' || mb_strlen($advertisementRequest->about) <= 30){
+        $err = 'Описание слишком короткое!';
+    } else if ($advertisementRequest->price === null){
+        $err = 'Цена не указана!';
+    } else if ($advertisementRequest->advertisement_id !== $advertisement->id) {
+        $err = 'Не верный идентификатор объявления!';
+    }
+
+
+    if (!isset($err)) {
+        if ($advertisementService->updatePublicAdvertisementInfo($advertisementRequest)) {
+            updateAdvertisementSession(false, $advertisementRequest);
+            header("Location: /id{$advertisement->id}");
+        }
+    }
+}
+
+function updateAdvertisementSession (bool $bool, EditAdvertisement $advertisementRequest){
+    if ($bool){
+        $_SESSION['title'] = $advertisementRequest->title;
+        $_SESSION['address'] = $advertisementRequest->address;
+        $_SESSION['about'] = $advertisementRequest->about;
+        $_SESSION['price'] = $advertisementRequest->price;
+    } else {
+        $_SESSION['title'] = null;
+        $_SESSION['address'] = null;
+        $_SESSION['about'] = null;
+        $_SESSION['price'] = null;
+    }
+}
 ?>
 <div class="edit_id_main_block">
-    <div class="edit_id_title">Редактирование изображений</div>
-    <div class="edit_id_back"><a href="id<?=$advertisement->id?>">Назад</a></div>
+    <div class="edit_id_title edit_id_left_bottom">
+        <p>Редактирование изображений</p>
+        <div class="edit_id_back"><a href="id<?=$advertisement->id?>">Назад</a></div>
+    </div>
+
     <?php if (!empty($images)) : ?>
     <div class="edit_id_img_block">
         <?php for ($i = 0; $i < count($images); $i++) : ?>
@@ -59,10 +102,16 @@ if (isset($_POST['add_img'])) {
     </form>
     <div class="edit_id_title">Редактирование информацию объявления</div>
     <form method="post" class="edit_id_form_block">
-        <p>Заголовок объявления </p>
-        <input class="edit_input" type="text" name="title" value="<?=$advertisement->title?>">
-        <p>Описание объявления </p>
-        <input class="edit_input" type="text" name="title" value="<?=$advertisement->about?>">
+        <p>Заголовок объявления : </p>
+        <input class="edit_input" type="text" name="title" value="<?=$_SESSION['title'] ?? $advertisement->title?>">
+        <p>Адрес : </p>
+        <input class="edit_input" type="text" name="address" value="<?=$_SESSION['address'] ?? $advertisement->address?>">
+        <p>Описание объявления : </p>
+        <textarea class="edit_textarea" name="about"><?=$_SESSION['about'] ?? $advertisement->about?></textarea>
+        <p>Цена : </p>
+        <input class="edit_input" type="number" name="price" value="<?=$_SESSION['price'] ?? $advertisement->price?>">
+        <input class="edit_input" type="hidden" name="advertisement_id" value="<?=$advertisement->id?>">
+        <input class="edit_submit" type="submit" name="edit_advertisement" value="Сохранить">
     </form>
 </div>
 <script type="text/javascript">

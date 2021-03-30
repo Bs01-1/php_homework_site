@@ -177,9 +177,9 @@ if (isset($_POST['profile_update'])) {
         <?php foreach ($advertisements as $item) :
             if ($item->relevance === 'close') :
                 ?>
-                <div class="profile_advertisement" title="<?=$item->title?>" onmouseover="selectBlock(this)" onmouseleave="leave(this)">
+                <div id="<?=$item->id?>" class="profile_advertisement" title="<?=$item->title?>" onmouseover="selectBlock(this)" onmouseleave="leave(this)">
                     <img src="<?=$fileManager->getFirstImgPathByAdvertisement($item)?>" alt="">
-                    <a class="profile_advertisement_more" id="more" href="<?='profile'.$profileUser->id?>" onclick="deleteAdvertisement(<?=$item->id?>)">Удалить</a>
+                    <div class="profile_advertisement_more" id="more" onclick="deleteAdvertisement(<?=$item->id?>)">Удалить</div>
                 </div>
         <?php endif; endforeach; else :?>
             <div class="profile_advertisement_mini_title">У вас нет объявлений!</div>
@@ -210,6 +210,8 @@ if (isset($_POST['profile_update'])) {
             body: formData
         });
 
+        let block = document.getElementById(advertisement_id);
+        block.parentNode.removeChild(block);
         addNotification(await result.text());
     }
 

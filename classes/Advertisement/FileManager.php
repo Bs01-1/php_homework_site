@@ -142,10 +142,23 @@ class FileManager
         $existImgPath = $defaultImgPath . '/' .
             $advertisement->type . '/' . $advertisement->user_id . '/' . $advertisement->id;
 
-
         if (!file_exists(rootPath . $existImgPath . '/' . $imgName)) {
             return false;
         }
-        return unlink(rootPath . $existImgPath . '/' . $imgName);
+        $result =  unlink(rootPath . $existImgPath . '/' . $imgName);
+        if (empty($this->getCountImagesByAdvertisementId($advertisement))) {
+            rmdir(rootPath . $existImgPath);
+        }
+        return $result;
+    }
+
+    public function deleteImages(Advertisement $advertisement, array $images): bool
+    {
+        foreach ($images as $image) {
+            if (!$this->deleteImg($advertisement, $image)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

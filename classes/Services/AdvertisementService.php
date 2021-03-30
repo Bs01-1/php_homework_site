@@ -10,6 +10,7 @@ use Classes\Core\Paginator;
 use Classes\Repositories\AdvertisementRepositoryInterface;
 use Classes\Request\AdvertisementRequest;
 use Classes\Request\CloseAdvertisement;
+use Classes\Request\EditAdvertisement;
 use Classes\Request\GetAdvertisementRequest;
 use Classes\Request\MainAdvertisementRequest;
 use Classes\User;
@@ -92,5 +93,10 @@ class AdvertisementService
     public function deleteAdvertisementByUserId(CloseAdvertisement $closeAdvertisement): bool
     {
         return $this->advertisementRepository->deleteAdvertisementByAdvertisementIdAndUserId($closeAdvertisement);
+    }
+
+    public function updatePublicAdvertisementInfo(EditAdvertisement $advertisement): bool
+    {
+        return $this->advertisementRepository->updatePublicAdvertisementInfo($advertisement);
     }
 }
