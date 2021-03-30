@@ -32,6 +32,7 @@ use Classes\Services\UserService;
         ['url' => '/rentals', 'path' => 'advertisement.php'],
         ['url' => '/id(.+)', 'path' => 'id.php'],
         ['url' => '/profile(.+)', 'path' => 'profile.php'],
+        ['url' => '/edit_id(.+)', 'path' => 'edit_id.php'],
         ['url' => '/api\/get_advertisement', 'path' => 'api/get_advertisement.php',
             'methods' => ['POST'], 'ajax' => true],
         ['url' => '/api\/set_vote', 'path' => 'api/set_vote.php',
@@ -47,6 +48,8 @@ use Classes\Services\UserService;
         ['url' => '/api\/delete_buy', 'path' => 'api/delete_buy.php',
             'methods' => ['POST'], 'ajax' => true],
         ['url' => '/api\/sale_advertisement', 'path' => 'api/sale_advertisement.php',
+            'methods' => ['POST'], 'ajax' => true],
+        ['url' => '/api\/delete_img', 'path' => 'api/delete_img.php',
             'methods' => ['POST'], 'ajax' => true]
     ];
 

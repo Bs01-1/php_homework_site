@@ -94,7 +94,7 @@ $fileManager = new FileManager();
     </div>
     <?php if (isset($user) && $advertisement->user_id === $user->id) : ?>
     <div class="advertisement_page_content_button_block">
-        <a href="" class="advertisement_page_content_button">Редактировать</a>
+        <a href="edit_id<?=$advertisement->id?>" class="advertisement_page_content_button">Редактировать</a>
         <?php if ($advertisement->relevance === 'open') : ?>
         <a href="<?='id'.$advertisementId?>" class="advertisement_page_content_button" onclick="closeAdvertisement()">Закрыть объявление</a>
         <?php endif; ?>

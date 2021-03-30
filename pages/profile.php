@@ -115,7 +115,7 @@ if (isset($_POST['profile_update'])) {
                 </div>
             <?php endforeach; endif; ?>
         <?php if ($buys = $buyService->getBuysByUserAndSuccess($user, false)) : ?>
-        <div class="profile_advertisement_mini_title">Ожидаем ответ продовца</div>
+        <div class="profile_advertisement_mini_title">Ожидаем ответ продавца</div>
         <?php
         /**
          * @var $item Buy
