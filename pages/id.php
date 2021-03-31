@@ -86,6 +86,7 @@ $fileManager = new FileManager();
             <div class="advertisement_address">Адрес : <?=$advertisement->address?></div>
             <div class="advertisement_phone">Телефон : <?=$advertisementUser->phone?></div>
             <div class="advertisement_page_price">Цена : <?=$advertisement->price?></div>
+            <div class="advertisement_page_price">Продавец : <?=$advertisementUser->nickname?></div>
         </div>
     </div>
     <div class="advertisement_page_content">
@@ -227,7 +228,7 @@ $fileManager = new FileManager();
     
     async function buyAdvertisement() {
         let formData = new FormData();
-        formData.append('user_id', '<?=$user->id?>');
+        formData.append('user_id', '<?=$user->id ?? null?>');
         formData.append('advertisement_id', '<?=$advertisement->id?>');
 
         let result = await fetch('/api/buy_advertisement', {
