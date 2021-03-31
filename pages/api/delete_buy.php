@@ -19,7 +19,7 @@ $buyRepository = new BuyRepository($mysqli);
 $buyService = new BuyService($buyRepository, $advertisementRepository);
 
 $buy = $buyService->getBuyById($buyId);
-if (!$buy || !$buy->success) {
+if (!$buy || $buy->success) {
     echo 'Обновите страницу!';
     return;
 }
